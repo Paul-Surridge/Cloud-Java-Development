@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- This instantiates an 'org.springframework.context.annotation.internalCommonAnnotationProcessor' in lieu of the <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/> -->
+    <!-- <context:annotation-config/> -->
+
+    <!-- This implicitly includes and enables the functionality of the <context:annotation-config/> above, the base-package is the base package that will be scanned for annotated components -->
+    <context:component-scan base-package="academy.learnprogramming"/>
+
+    <!-- Attributes:
+            id:     Name of the bean.
+            class:  Class that will be instantiated and placed within the bean.
+    -->
+    <bean id="numberGenerator" class="academy.learnprogramming.NumberGeneratorImpl"/>
+    <bean id="game" class="academy.learnprogramming.GameImpl">
+        <!-- Constructor Based DI:      <constructor-arg> allows for another bean to be passed to this bean via its constructor
+
+                                        Atrributes:
+                                        ref=<bean_id>                       id of the bean that will be passed to the constructor of this bean.
+
+             <constructor-arg ref="numberGenerator"/>
+
+             Setter Based DI:           <property> allows for another bean to be passed to this bean via a setter method.
+                                        <property> declares and informs the spring framework of a property of the bean i.e. a field that is available to be get/set.
+
+                                        Atrributes:
+                                            name=<name_of_field_in_bean>    Name of the field within the bean that will receive and be assigned the passed bean.
+                                            ref=<bean_id>                   id of the bean that will be passed to the property of this bean
+
+        <property name="numberGenerator" ref="numberGenerator"/>            This is only required if not using AutoWiring. -->
+    </bean>
+
+    <!-- Bean that will process all annotations within other beans within the container.
+         There is no need to specific additional id, the class name is all that is required.
+         Once this bean is added to the container annotations can be added to other beans in container.
+         This is only required if not using AutoWiring.
+
+    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor"/> -->
+
+
+</beans>

@@ -1,0 +1,12 @@
+Please Note:
+
+	- Netbeans IDE was used for the development of the x3 projects given that it freely supports embedded Java database:
+
+		Netbeans: 12.1
+		Java: 1.8.0_261
+		JDK: 8u261 Windows x64
+		JRE: SE Runtime Environment 1.8.0_261-b12
+		Scene Builder: 2.0
+
+	- If wish to run any of the projects please download the respective project folder and run within compatible Netbeans IDE. 
+	- IntelliJ was used for all other projects contained in this repository.

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Define the parent pom.xml file of this module -->
+    <parent>
+        <groupId>org.surridge.paul</groupId>
+        <artifactId>guess-the-number-game</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Define the artifactId of this module -->
+    <artifactId>core</artifactId>
+
+    <!-- Dependencies are pulled into and made available within the module during the build process.
+         Dependencies within child pom.xml only need to list the groupId and artifactId to reference the dependencies referenced in the parent pom.xml -->
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

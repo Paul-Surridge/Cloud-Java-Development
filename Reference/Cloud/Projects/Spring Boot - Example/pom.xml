@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Within a multi-module maven project
+        1. JVM: Reads in the overall project pom.xml (this file) to understand and build the overall project.
+        2. JVM: Reads in the pom.xml files contained within the module directories. -->
+
+    <!-- Define the groupId, artifactId and version of this pom.xml -->
+    <groupId>org.surridge.paul</groupId>
+    <artifactId>guess-the-number-game</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <parent>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>2.7.0</version>
+            <relativePath/>
+    </parent>
+
+    <!-- Define the modules that comprise of this maven project -->
+    <modules>
+        <module>core</module>
+        <module>console</module>
+        <module>web</module>
+    </modules>
+
+    <!-- Define the packaging of this maven project, the packaging of 'pom' defines the following:
+
+            Local Directory:     The directory which contains this pom.xml file.
+            Sub Directories:     The directories within the local directory represent the modules within this overall maven project.
+
+         This pom.xml file is the root or master pom.file which specifies the construct of the overall project. -->
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.version>18</java.version>
+    </properties>
+
+</project>
