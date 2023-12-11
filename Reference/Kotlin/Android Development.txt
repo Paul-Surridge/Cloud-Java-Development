@@ -1,0 +1,417 @@
+Andriod Development:
+
+	Ecology:
+
+		- Android was created by Google.
+		- Android has many libraries under the name JetPack.
+		- Android has recently added a major new way of building UI's using Compose compared to the previous means of using 'Views'.
+		- Android has decided to officially support Kotlin which is a language developed by JetBrains, who are the same company which produced many software development tools including IntelliJ.
+		- Android use of the name 'Jet' in JetPack and the name of the company JetBrains maybe or maybe not connected, but JetBrains did not build nor manage JetPack (Google Android does).
+
+	Views:
+
+		- Views are and outdated paradigm which are XML based/generated.
+		- Views defines the design within XML where ID's are then obtained within the program.
+		- Views has the states of UI components set via setters within the program.
+		- Views can be error prone given the need to manually update UI if an external configuration change occurs e.g. user rotates UI.
+
+	Compose:
+
+		- Compose is a toolkit for building Android UI's.
+		- Compose allows for the building of UI's via @Composable functions.
+		- Compose enables all of the UI components/elements to be defined within the program as Kotlin functions.
+		- Compose stores the state of the UI component stored within the component (no need to continually monitor and ensure in correct state).
+		- Compose utilises event handlers to listen for state changes from user (known as 'Recomposition').
+		- Compose has x3 basic standard layout elements which are natural containers within the form:
+
+			1. Column
+			2. Row
+			3. Box
+
+	Row:
+
+		- Row is a container element within Compose.
+		- Row is generally as follows:
+
+			 -------------------------------------
+			|  -------------   -------------   ---------
+			| |		| |		| |
+			|  -------------   -------------   ---------
+			 -------------------------------------
+
+		- Row maybe wider than the sum of the widths of the child elements, at which point the property horizontalArrangement is applied. 
+
+	Column:
+
+		- Column is a container element within Compose.
+		- Column is generally as follows:
+
+			 -----------------
+			|  -------------  |
+			| |		| |
+			|  -------------  |
+			|  -------------  |
+			| |		| |
+			|  -------------  |
+			|  -------------  |
+			| |		| |
+			|  -------------  |
+
+		- Column maybe higher than the sum of the heights of the child elements, at which point the property verticalArrangement is applied.
+
+	Box:
+
+		- Box allows for the 'stacking' of elements on top of one another.
+		- Box allows for the specific arrangement of elements that it contains.
+
+	Composable:
+
+		- @Composable
+		- Composable functions define the components within the UI, such components are called 'composables'.
+		- Composable functions are immutable.
+		- Composable functions are fast.
+		- Composable functions are capitalised (pascal case rather than camel case).
+
+			@Composable
+			fun Greeting(name: String, modifier: Modifier = Modifier)
+			{
+
+		- Composable functions are said to 'emit UI'.
+		- Composable functions do not return anything.
+		- Composable functions can call other Composable Functions.
+		- Composable functions are declarative i.e. they are specified not to be built/instantiated in any particular order but simply declared and the compiler scans, builds and maintains their implemention as it best sees fit. 
+		- Composable functions cannot be referenced i.e. it is not possible to hold a reference to them and later update its content (you need to call again with differing arguments).
+		- Composable functions should not call Global variable or properties.
+		- Composable functions should be side effect free i.e. operate the same when passed the same argument (idempotent).
+		- Composable functions are called again when its arguments change and a new UI component is generated and drawn again (called 'recomposition').
+		- Composable functions can be executed in any order (as deemed most appropriately by compiler) and not specifically as ordered in *.kt.
+		- Composable functions run in parallel taking advantage of multiple cores when rendering a screen.
+		- Composable functions should not contain local variables for this is no longer side effect free and may result in undefined behaviour.
+		- Compose may have its own compiler which utilises annotations.
+		- Compose naturally tries to only change which has needed to change.
+		- Composable functions should all have a Modifier as a parameter.
+		- It may be case that a *.kt file runs within Compose (rather than the Android project/program per se), the UI components are defined using functions with @Composable.
+		- Compose allows for building a large collection/library of reusable components using annotations.
+		- Recomposition is 'optimistic':
+
+			Compose will expect to complete the recomposition before being given a new argument.
+			If a new argument is passed before it has finished a recomposition it 'might' cancel the current recomposition and try again.
+
+		- Composable functions may be called frequently e.g. animations, therefore it is important that the functions are fast so that frames are not dropped.
+		- Composable function parameters are initented to define behaviour.
+		- Composable function utilise MutableState, remember and rememberSavable to store state and have Composable track and automatically implement changes to the UI (presume it automatically recomposes).
+		- Composable functions must:
+
+			Be a noun:	 					DoneButton()
+			NOT a verb or verb phrase: 				DrawTextField()
+			NOT a nouned preposition: 				TextFieldWithLink()
+			NOT an adjective: 					Bright()
+			NOT an adverb: 						Outside()
+			Nouns MAY be prefixed by descriptive adjectives: 	RoundIcon()
+
+	Annotations:
+
+		- Annotations are frequently used throughout.
+		- Annotations can be passed arguments to define the value of the elements.
+
+			@Composable:		Function is a composable function
+			@Preview:
+
+	Light Bulb:
+
+		- Light Bulb is an icon which can appear with Android Studio.
+		- Light Bulb allows for convenient actions to be quickly applied to existing source code.
+
+			1. Highlight a body of text within the source code.
+			2. If applicable a light bulb will appear nearby allowing for code to be applied.		
+
+	Naming Conventions:
+
+		https://github.com/androidx/androidx/blob/androidx-main/compose/docs/compose-api-guidelines.md#naming-unit-composable-functions-as-entities
+
+	Meterial Design:
+
+		- Material Design is an adaptable toolkit of guidelines, components and tools that support tehbest practices of UI Design.
+		- Material Design is shipped with Compose (Composes Material Design 2 and 3) along with 'Material You' which is latest and intended to ultilise the latest features of Android 12+.
+		- Material Design is shipped with Compose (Composes Material Design 2 and 3).
+
+	Material You:
+
+		- Material You supports Themes, which allow for the generic customisation e.g.
+
+			Colour
+			Typography
+			Shapes
+
+			Themes should be the outermost function that is invoked.
+
+	Scaffold:
+
+		- Scaffold is a fundamental component of the Material Design toolkit.
+		- Scaffold is a layout for arranging common UI components in common patterns.
+
+	Surface:
+
+		- Surface is a central metaphor within Material Deisgn for which content sits on.
+		- Surface has many properties.
+
+	Layouts
+
+		- Layout is an object within Compose with the following standard elements:
+
+			Column
+			Row
+			Box
+
+		- Layout wraps components accordingly.
+
+	Composable Function Lambda:
+
+		- Composable Function Lambda is a function that is passed as an argument to another function (just like Java) i.e. a body of source code is passed as an argument.
+		- Composable Function Lambda allows for the building up of objects inline by defining and passing functionality directly into other object without the need to defined them separately, instantiate and pass in. 
+
+	Modifiers:
+
+		- Modifiers decorate/augment Composable, every Composable in the Compose Toolkit accepts Modifiers as parameters.
+		- Modifiers can be chained together e.g.
+
+			Size
+			Padding
+			Alpha
+			Clickable(Define called source code when composable is clicked)
+
+		- Modifiers are composable specific i.e. each composable will have its own set of modifiers.
+		- Modifiers are not accessible outside of the composable function therefore modifiers are type safe.
+		- Modifiers can/should be passed down to any child @Composables that may be contained within an @Composable:
+
+			@Composable
+			fun GreetingText(sMessage: String, sFrom: String, modifier: Modifier = Modifier)
+			{
+    			    Column(modifier) {
+        			Text(text = sMessage, fontSize = 30.sp, lineHeight = 116.sp)
+        			Text(text = sFrom, fontSize = 36.sp)
+    			    }
+			}
+
+		- Modifiers can be passed and used to set the properties of both:
+
+			1. UI Elements:		Text, Image ...
+			2. Layouts:		Box, Row, Column
+
+	Live Templates:
+
+		- Live Templates are a collection of templates that can be added to your source code.
+		- Live Templates are accessible via Preferences | Editor | Live Templates
+		- Live Templates include:
+
+			Shortcuts:
+
+				+ Tab or Return
+
+				comp		
+
+					@Composable
+					fun () {
+
+					}
+
+				rw
+
+					Row { this: RowScope
+
+					}
+
+				prev
+
+					@Preview
+					@Composable
+					fun () {
+
+					}
+
+					NB: These composable functions can not receive arguments
+
+			Identifer Context Menu:
+
+				Rightclick on any appicable identifier and select to 'Surround' with an applicable object.
+
+
+	Gutter Icons:
+
+		- Gutter Icons can be found in the left hand side of the editor.
+		- Gutter Icons provide access via click/right click to the available options.
+
+			Image:		Switch image resource
+			Colour:		Colour picker
+		
+	Previews:
+
+		- Previews allow a composable to be previewed without needing to compile, build and run on a device.
+		- Previews output their preview to the 'Preview Window' (accessible via 'split' button in top right hand corner).
+		- Previews can be adjusted and refined in realtime by clicking on cog wheel in gutter.
+		- Previews can be stacked to add another instance of the composable to the Preview Window in order to allow for comparison:
+
+			@Preview(fontScale = 1.5f)
+			@Preview(showBackground = true ...
+
+		- Previews can be encorporated into custom annotations:
+
+			@Preview(
+				Value Pairs
+			)
+			@Preview(
+				Value Pairs
+			)
+			annotation class FontScalePreviews
+
+			@Preview(
+				Value Pairs
+			)
+			@Preview(
+				Value Pairs
+			)
+			annotation class LightDarkPreviews
+
+			//The above annotations can be applied directly to any composable and the values are applied automatically.
+
+	Live Edit:
+
+		- Live Edit allows for the manual changing of constant literals within the code e.g. composable function without the need to recompile, rebuild and upload.
+		- Live Edit changes will be reflected in realtime if being shown in the Preview Window.
+
+	Layout Inspector:
+
+		- Layout Inspector allows for debug.
+		- Layout Inspector requires a process to be selected e.g. the App you currently have in development.
+		- Layout Inspector left hand side contains all of the nodes with the UI graph, right click on any node to show/hide other nodes in other subtree to increase clarity.
+		- Layout Inspector allows to select on a composable in the UI which opens a table of properties on right hand side, click on properties to open/jump applicable aspect in source code.
+		- Layout Inspector allows for the opening of a image to overlay the emulator to ensure that the UI design is exactly as it needs to be as shown in the image file.
+
+	Scalable Pixels:
+
+		- Scalable Pixels are a unit of measure of font size.
+		- Scalable Pixels automatically adjust and scale depending upon the 'preferred' text size within the phones local settings.
+		- Scalable Pixels have the notation 'sp'
+
+	Resources:
+
+		- Resources are added to projects vi the Resource Manager.
+		- Resources are accessible by Compose i.e. Compose has full access to all resources within the resource folders.
+		- Resources are accessed via resource ID's that are generated by the projects R class.
+
+			- R Class is automatically generated which contains all of the resource ID's in the project.
+			- R Class typically defines the resource ID's as being the filename of the resource:
+
+				R.drawable.myImage.png
+
+			- R Class is rooted from the resource directory in the project i.e. 'drawable' above is a subdirectory in the 'res' folder.
+
+	AndroidX:
+
+		- AndroidX is the 'Android Extension' package.
+		- AndroidX contains a set of core libraries and classes for app development.
+
+	String Resources:
+
+		- String Resources are string constants which can be injected into source code as required.
+		- String Resources are typically stored within the project within external/separate *.xml file.
+		- String resources are extracted from the source code via teh Extract Resource dialog:
+
+			1. Highlight the text (no need to include "").
+			2. Click on Light Bulb.
+			3. 'Extract String Resource'.
+			4. Give name:	[Lower case with _ to spearate words] e.g.	happy_birthday_message
+			5. Resoure String is now accessible/referenced via R:		stringResource(R.string.happy_birthday_text)
+
+			NB: Some versions of Android Studio replace the text with .getString(), this should be changed to stringResource().
+
+	Shortcuts:
+
+		Alt+Enter:
+
+			1. Highlight text
+			2. Press Alt+Enter to open menu allowing for constructs and modifications to be applied
+
+		Help + Find Action:
+
+			1. Type in what want to do.
+			2. Android Studio produces a list of settings.
+
+	Best Practices:
+
+		1. Parent Modifier Pass Down:		It is always best to have all of the configuration/setting/establishing/defining of modifiers as high up as possible within @Composable tree graph, so that modifiers can just be passed down to child @Composables.
+		2. Image Pixels Per Square Inch:	Devices have differing DPI, this must be taken into consideration when using images for to ensure that they do not take up too much memory or appear to large etc... 
+ 		3. Resource Management:
+
+			- Resources should all be appropriately arranged and organised within corresponding folders e.g.
+
+				drawable:	images
+				mipmap:		launcher icons
+				values:		string resources
+
+			- Resource types listing:	https://developer.android.com/guide/topics/resources/available-resources
+
+	Tips/How Tos:
+
+		Add An Image:
+
+			1. Resource Manager.
+			2. Import Drawable, import image from computer file system.
+			3. Image file will be imported into the applicable resource folder within this project.
+
+		Type Inference:
+
+			1. If in doubt or need to know what type is being assigned/inferred to a variable (val/var).
+			2. Simply hover over variable and tooltip will describe what is the inferred type.
+ 
+
+		Find UI Element:
+
+			1. Click on element within Design Pane.
+			2. Cursor automatically jumps to corresponding composable function in source code.
+
+		Find API Information:
+
+			1. Review the import statement at the top of the source file.
+			2. Open: https://developer.android.com/reference.
+			3. Look for the library and package on left hand side.
+			4. Open Overview
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

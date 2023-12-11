@@ -3,7 +3,7 @@ Docker:
 	Overview:
 
 		- Docker is a platform or ecosystem for creating and running containers.
-		- Docker is a supplied from Docker with following OS versions:
+		- Docker is supplied from Docker with following OS versions:
 
 			Docker for Windows
 			Docker for MacOS
@@ -183,9 +183,8 @@ Docker:
 
 			1. Image: Build:
 
-				1. Dockerfile:		Construct a Dockerfile script to build image (and place in cache).
+				1. Dockerfile:		Construct a Dockerfile script to build image (and place in cache within docker-server i.e. there are no separate instances of image available within the host OS file system).
 				2. docker-client:	Pass to docker-server (via docker-client).
-
 				3. Return:		Image Name/ID.
 
 			2. Container: Instantiate:
@@ -207,7 +206,6 @@ Docker:
 
 					> docker start <container id>		//docker-server spins up the container and calls the designated 'Startup Command'.
 					> docker start <container id> - a	//docker-server spins up the container and calls the designated 'Startup Command' and establishes a connection to the STDOUT of the container, whereby routing the output of the container back to Terminal.
-
 
 			NB: Container: Run:
 
@@ -248,13 +246,13 @@ Docker:
 					1. Base Image:		Base images are retrieved from either:
 
 									1. DockerHub:		Downloaded from DockerHub if not in local cache.
-									2. Local Cache:		Retrieved directly from cache when container is being instantiated (not built).
+									2. Local Cache:		Retrieved directly from cache when container is being instantiated (not when image is built).
 
 					2. Build Image:		'Building an image' involves using a base image as a base and applying subsequent:
 
 									1. Programs
 									2. Source code file(s)
-									3. Reseource file(s)
+									3. Resource file(s)
 									4. Other
 
 				- docker-server uses the Dockerfile and multiple temporary images to build final custom image as follows:
@@ -266,7 +264,7 @@ Docker:
 						File Sytem:	docker-server uses multiple temporary images to augment the File System by either:
 
 									1. Online:		Download/install other programs from DockerHub.
-									2. Local:		Copies and pulls in other runtimes/source code files from the local machine i.e. the actual program that will ruun within the container.
+									2. Local:		Copies and pulls in other runtimes/source code files from the local machine i.e. the actual program that will run within the container.
 
 						Resources:	docker-server defines all remaining aspects including:
 
@@ -293,7 +291,7 @@ Docker:
 				- Therefore if changes need to be made to Dockerfile, it is best to:
 	
 					1. Arrange the Dockerfile so that any steps that are likely to change are as far down the file as possible.
-					2. Arrange the Dockerfile so that all of the time consuming steps are as close to the top of the file of behind aspects that are more likely to change.
+					2. Arrange the Dockerfile so that all of the time consuming steps are as close to the top of the file or behind aspects that are more likely to change.
 
 				- Dockerfile has/is:
 
@@ -336,6 +334,7 @@ Docker:
 					> docker run PaulSurridge/redis:latest			//Run version which is the latest (manually define)
 
 				- The tag as mentioned in the documentation is specifically the version at the end and does not include the whole 'Docker ID / Repo/ProjectName' prefix.
+				- The 'Docker ID' is your ID that you have on DockerHub, such that docker-server may need/use this if need to go off to DockerHub to pull down images?
 
 			:latest Tag:
 

@@ -84,8 +84,8 @@ Cloud Native Development
 			- Responsibility:			Microservices are organised such that each component is responsible for the correct operation of a particular aspect of the overall application.
 			- Products:				Microservices are considered as 'products' rather than 'projects'.
 			- Smart Endpoints and Dumb Pipes:	Microservices do not ultilise an intelligent ESB (Enterprise Service Bus) but pushes more of the intelligence to be within the microservice endpoints themselves.
-			- Decentralised Governance:		Microservices do not have implement an overarching governance but conponents operating independently. 
-			- Decentralised Data Management:	Microservices have their own data base and data management.
+			- Decentralised Governance:		Microservices do not have to implement an overarching governance but conponents operating independently. 
+			- Decentralised Data Management:	Microservices have their own database and data management.
 			- Infrastructure Automation:		Microservices utlilise heavy automation of integration, testing and deployemnt.
 			- Code Base:				Microservices may all share the same code base via a shared repository but remain entirely independent when running.
 
@@ -117,7 +117,7 @@ Cloud Native Development
 			- Complexity:				Microservices distributed nature increase inherent complexity.
 			- Network:				Microservices distributed across multiple physical servers introduce need to manage a complex network and connections.
 			- Latency:				Microservices distributed nature introduce an underlying latency between services.
-			- RPC:					Microservices utilise remote procedure call to invoke methods within other services, means and techniques exist which provide the ability to call a remote method as if it is an inline call.
+			- RPC:					Microservices utilise remote procedure call to invoke methods within other services, however means and techniques exist which provide the ability to call a remote method as if it is an inline call.
  			- Moving Parts:				Microservices architecture has many moving parts.
 			- Consistency:				Microservices tend to have their own data store, consequently there is potential for inconsistent data to arise.
 			- Fault Propagation:			Microservices distributed nature may allow a fault in one service to popagate and effect numerous other services.
@@ -251,7 +251,7 @@ Cloud Native Development
 
 						3. Event Sourcing:
 
-							1. State is initial defined.
+							1. State is initially defined.
 							2. State is modified where all modifications are stored in logs.
 							3. State is rebuilt by 'summing' up all of the stored logs rather than store and pull from a database e.g.:
 
@@ -465,7 +465,7 @@ Cloud Native Development
 					- Microservices should only be broken apart when:
 
 						1. Updates:		Implementation of updates become difficult or slow.
-						2. Data Model:		Implementation of a general data model and database becomes difciult to work with and/or overly complex.
+						2. Data Model:		Implementation of a general data model and database becomes difficult to work with and/or overly complex.
 						3. Scaling:		Implementation of differing areas of the application are beginning to acquire differing load expectations and need to be independently scaled.
 
 				'Don't turn microservices into SOA'
@@ -479,7 +479,7 @@ Cloud Native Development
 					- Microservices were adopted early by Netflix (given that it accounted 1/3 of internet traffic).
 					- Microservices should follow basic rules when starting out:
 
-						1. Simplicity:		Microservices should kept as simple as possible.
+						1. Simplicity:		Microservices should be kept as simple as possible.
 						2. Tools:		Microservices should aim to utilise as many off-the-shelf tools as possible.
 
 		Monolith v Microservices
@@ -495,7 +495,7 @@ Cloud Native Development
 						Modularity		//Microservices enforce modularity much more than language i.e. given a language it is much more easy to 'cut corners' and 'workaround' any modularity constraints.
 						Multiple Platforms	//Microservices do provide flexibility in choice of language to implement some particular functionality, however should ideally be kept to a minimum where any deviation or addition of another language should be fully justified.
 
-			- Micorservices are not completely an improvement upon a monolith architecture.
+			- Microservices are not completely an improvement upon a monolith architecture.
 			- Microservices should only be deployed when fully confident that they are approproiate, if in doubt stick with the monolith.
 
 		Provisions:
@@ -565,31 +565,32 @@ Cloud Native Development
 			9. DevOps:			Simplifies DevOps cycles given that developers do not need to describe the infrastructure needed to integrate, test, deiver and deploy code builds into production.
 			10. Polyglot:			Environment supports and allows for the use of any language or platform.
 			11. Parallel Processing:	Tasks that require parallel processing can be completed faster and more cost effective.
-			12. Operational Management:	Near total visibility of sytem provides monitoring/logging of system/user activity and consumption.		
+			12. Operational Management:	Near total visibility of sytem provides monitoring/logging of system/user activity and consumption.
+			13. Expertise Concentration:	Reducing the need for personel to be a jack of all trades rather than a master of a few.		
 
 		Disadvantages
 
 			1. Delay:			Delay in response for the containers need to 'spin up' before completing any work, hence serverless maynot be appropriate for time critical applications e.g. trading.
-			2. Workloads:			Stable and predicitable workloads may not be cost effective compared to traditional server environment. Serverless is ideal for spikey variable demand.
+			2. Workloads:			Stable and predictable workloads may not be cost effective compared to traditional server environment. Serverless is ideal for spikey variable demand.
 			3. Monitoring/Debugging:	The increased complexity of serverless/microservice environments reduces the ability to debug and monitor using existing tools and procedures.
 			4. Vendor Lockin:		Deep integration with a cloud service providers ecosystem can provide significant value but other companies will need to mitigate any material lock-in risks. 
 
 		Serverless Stack:
 
-			The core components of a system that would be considered of having a 'serverless' architecture:
+			The core components of a system that would be considered as having a 'serverless' architecture:
 
-			- FaaS:				Central/fundational computation and processing engine in serverless architectures.
-			- DB/Storage:			SQL, NoSQL and Object Storage are the foundation of the Data Layer. The 'serverless' approach invoves transitioning away from provisions of 'instances' with defined capactity, connection and query limits towards models that scale linearly with demand in both infrastructure and pricing.
+			- FaaS:				Central/foundational computation and processing engine in serverless architectures.
+			- DB/Storage:			SQL, NoSQL and Object Storage are the foundation of the Data Layer. The 'serverless' approach involves transitioning away from provisions of 'instances' with defined capactity, connection and query limits towards models that scale linearly with demand in both infrastructure and pricing.
 			- Events/Streams:		Events-driven, streaming and messaging are particularly suited for serverless environments most notably Apache Kafka event streaming platform.
-			- API Gateways:			Proxies to web actions and provide HTTP method routing, client ID/secrets, rate limits, CORS, viewing API usage, viewing response logs and API sharing polices.
+			- API Gateways:			Proxies to web actions and provide HTTP method routing, client ID/secrets, rate limits, CQRS, viewing API usage, viewing response logs and API sharing polices.
 
 		FaaS
 
 			- FaaS (Function as a Service)
-			- Faas is a central paradigm of serverless
-			- FaaS is often conflated with serverless.
+			- FaaS is a central paradigm of Serverless
+			- FaaS is often conflated with Serverless.
 			- FaaS is a subset of Serverless.
-			- Faas is characterised as:
+			- FaaS is characterised as:
 
 				1. Application code that only runs in response to events/requests.
 				2. Containers that only run in response to events/requests.
@@ -617,7 +618,7 @@ Cloud Native Development
 
 		Abstraction Chain
 
-			- Serverless is a continuation of abstraction of the underlying technology, where abstraction refers to the notion that the underlying technology becomes abstract i.e. in that the implementation of the technology becomes irrelevant/unknown as long as it meets it functional contract.
+			- Serverless is a continuation of abstraction of the underlying technology, where abstraction refers to the notion that the underlying technology becomes abstract i.e. in that the implementation of the technology becomes irrelevant/unknown as long as it meets its functional contract.
 			- This is summarised:
 
 				Serverless
@@ -734,7 +735,6 @@ Cloud Native Development
 			Make
 			Meister
 			Ant
-			Maven
 			Rake
 			SCons
 			Phing

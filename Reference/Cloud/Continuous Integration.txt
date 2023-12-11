@@ -187,7 +187,7 @@ CI/CD
 		- User testing should not be batched up at the end, as this increases the likihood of significant rework or alteration.
 		- User testing should be run early and often while the code is being written even using emulation to obtain/identify user reaction and feedback.
 		- User testing should be completed as quickly as possible to prevent the 'waterfall' pattern from emerging.
-		- Users will only be grateful rapid development incrementations if the user experience is usable, effective and consistent.
+		- Users will only be grateful of rapid development incrementations if the user experience is usable, effective and consistent.
 
 	Value Stream Map
 

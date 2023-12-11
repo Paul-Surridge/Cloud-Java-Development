@@ -117,7 +117,7 @@ Spring Framework:
 								1. @Bean (Bean Methods):
 
 									- Bean methods 'produce', 'generate' and return object/primitive beans.
-									- Bean methods are invoked to instantiated and return a bean which are injected into variables.
+									- Bean methods are invoked to instantiate and return a bean which are injected into variables.
 									- Bean methods are registered by Spring when a container is instantiated.
 									- Bean methods are typically collated into a single location e.g. a configuration class.
 									- Bean methods are useful when additional initialisation needs to be applied to a bean before it is injected.
@@ -301,8 +301,8 @@ Spring Framework:
 				DI Form			Description										XML Element
 				__________________________________________________________________________________________________________________________________________________________________________
 
-				1. Constructor Based:	The dependency bean (Bean B) is injected to Bean A via the constructor of Bean2.		<constructor-arg ref="<bean_id>"/>
-				2. Setter Based:	The dependency bean (Bean B) is passed to Bean A via a setter method of Bean2.		<property name="<name_of_field_in_bean>" ref="<bean_id>"/>
+				1. Constructor Based:	The dependency bean (Bean B) is injected to Bean A via the constructor of Bean A.	<constructor-arg ref="<bean_id>"/>
+				2. Setter Based:	The dependency bean (Bean B) is passed to Bean A via a setter method of Bean A.		<property name="<name_of_field_in_bean>" ref="<bean_id>"/>
 				3. Field Based:		The dependency bean (Bean B) is directly injected into Bean A.
 
 				NB: Spring will convert a string passed within the attribute of an XML element to all primitive types that corresponds with the injected variable type within the bean. 
@@ -359,7 +359,7 @@ Spring Framework:
 
 				Field Based DI:
 
-					- Field based DI involes injecting bean directly into variable as they are initialised:
+					- Field based DI involves injecting bean directly into variable as they are initialised:
 
 						class ClassA
 						{
