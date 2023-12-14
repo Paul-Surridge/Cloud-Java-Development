@@ -377,6 +377,228 @@ Andriod Development:
 			3. Look for the library and package on left hand side.
 			4. Open Overview
 
+	Activity:
+
+		- Activity is a container for one or more screens within App.
+		- Activity is a unit within the program with which provide users with the ability to interact with program.
+		- Activity is the entry point for an App, typically a class called 'MainActivity' which implements 'ComponentActivity'.
+		- Activity is what is launched when the App starts.
+		- Activity used to represent x1 screen, then 'Fragments' allowed for multiple screens within x1 Activity, however that paradigm has been replaced with Jetpack Compose which all runs/contained within x1 activity within whole App.
+		- Activity may contain multiple screens when using Jetpack Compose.
+		- Activity have the following life cycle:
+
+						[Activity Launched]
+						|
+			User navigates to ----> onCreate()
+			the activity		|
+			|			onStart() <-----------------------------------------------------------------------------onRestart()
+			|			|											|
+			|			onResume() <--------------------------------------------				|
+			|			|							|				|
+			[App process killed]	[Activity Running]					|				|
+			|			|							|				|
+			|			Another activity comes into foreground			|				|
+			|			|							|				|
+			Other Apps with	------- onPause() ---------------------------------------------	User returns to activity	|
+			higher priority		|											|
+			need memory		Activity no longer visible								|
+			|			|											|
+			----------------------- onStop() ------------------------------------------------------------------------------ User navigates to activity
+						|
+						Activity is finished or being destroyed by OS
+						|
+						onDestroy()
+						|
+						[Activity Shutdown]
+
+			onCreate():
+
+				- Initialise variables
+				- Initialise view/content of activity
+				- UI not visible
+
+			onStart():
+
+				- UI becomes visible but user cannot interact
+				- Curtains have opened, the players and stage are visible but the play has not started just yet
+				
+			onResume():
+
+				- User can fully interact with App
+				- Activity is now running
+
+			onPause():
+
+				- When any other activity or piece of foreground becomes focus e.g. OS dialog or similar
+				- UI is visible
+
+			onStop():
+
+				- UI is not visible
+
+			onDestroy():
+
+				- Resources released to OS
+				- Typically invoked by:
+
+					1. User (via back button)
+					2. OS (when need resources)
+					3. OS (when configuration change e.g. screen rotation, language or others)
+
+			NB:
+
+				- All functions are overriden/implemented in the 'MainActivity' class. All of which can have simple text printed to console to illustrate when stages are called.
+				- OS does not guarantee that onStop() and onDestroy() will always be called, therefore important data should be saved within onPause().
+
+	Back Stack:
+
+		- Back Stack is a component/concept within all Apps.
+		- Back Stack is a stack of screens/activities e.g. given a web browsing App
+
+			New Bookmark Screen
+			-------------------
+			Bookmark Screen
+			-------------------
+			Browser Screen
+
+			Screens are pushed/popped onto stack as the screens are opened and closed.
+
+		- Back Stack is the collection of screens which form a single unit called a Task.
+
+	Task:
+
+		- Task represents an App.
+		- Task contains the Back Stack.
+		- Task may exist in many instances at any one time i.e. by having many Apps open simultaneously.
+		- Task(s) are all managed by the OS.
+
+			1. Task1 opens another App on the OS called Task2, the OS now has x2 Tasks.
+			2. Task2 opens and uses various activities building up the Back Stack within Task2.
+			3. User closes the activities in Task2, once Back Stack is empty OS reverts to the BAck Stack of Task1.
+
+	Launch Mode:
+
+		- Launch Mode refers to how the OS will behave when a new activity is opened and placed onto the Back Stack.
+
+			Standard:		Activities are simply placed onto the Back Stack.
+
+			Single Top:		Only x1 activity can be on the Back Stack at any one time.
+
+				1. Browser App open with x1 activity open.
+				2. Open Instagram and click on link.
+				3. No further instances of Browser activity are added to the Browser Back Stack but focus refers to the single activity in step 1.
+
+			Single Task:
+
+				1. Open Browser App.
+				2. Open Instagram and click on link.
+				3. Instead of refering to Browser App instance in step 1 another Browser task is created.
+				4. Therefore if user closes the 2nd Browser instance, user returns to Instagram rather than remain with Browser App.
+
+			Single Instance:
+
+				1. The same as 'Single Task', except.
+				2. Once within the second Browser Task it is not possible to open any other activities e.g. payment activity which prevents user from opening other activities (which may be a security risk).
+
+
+	Architectures
+
+		- Architectures adhere to common/familiar design patterns:
+
+			MVVM		MVC
+			MVI		MPC
+
+		- Architecture which is the most common in Android is MVVM (View ViewModel Model):
+
+
+					UI Actions -->				Updates Model -->
+				View				View Model					Model
+					<-- Notifies UI				<-- Notifies View Model
+
+
+			- MVVM has the following components:
+
+				View: 		UI
+				Model: 		Data / Remote API
+				View Model:	Interpretation Logic / Bridge / Storage of UI State
+
+			- MVVM model is the underlying model of data that is interpreted for the view, they are a 'model for a view'.
+			- MVVM is commonly used for individual components of an application e.g. ListView, but in Android it is typically applied to whole screen.
+			- MVVM ViewModel is typically a single class.
+			- MVVM ViewModel can be scoped to be applicable to only certain aspects/activities of an App or shared across multiple/all activites or only have a certain lifecycle.
+
+	Rotation / Configuration Change
+
+		- Rotation / Configuration Change typically cause the task to be destroyed causing the ViewModel class to be recreated (using default values)
+		- Rotation / Configuration Change can be mitigated by extending the Google supplied ViewModel (androidx.lifecycle) as your own custom ViewModel which will:
+
+			1. Automatically retain state when rotated, the ViewModel (and its state) now outlives the lifecycle.
+			2. Only be destroyed if the user explicitly pops the activity off the tasks Back Stack e.g. via the Back Button.
+
+	Context:
+
+		- Context is an instance of a class:
+
+			val myContext: Context 			(android.content)
+
+		- Context is a bridge/interface/access to the OS and other Apps.
+		- Context provides a 'context' for your App to operate within the wider OS e.g. gain access/communicate with:
+
+			OS Component
+			OS Filesystem
+			Resources
+			Preferences
+			Database
+			Other Apps
+			Launch Other App e.g. open a text file
+
+		- Context is part of standard heirachy:
+
+				 		Object
+				 _______________|_______________________
+				|			|		|
+				ContentProvider		Context		BroadcastReceiver
+							|
+							ContextWrapper
+				 _______________________|_______________
+				|			|		|
+				ContextThemeWrapper	Service		Application
+				|
+				Activity
+
+		- Context is the superclass of Activity and Application.
+		- Context is therefore available in all extended classes shown above and can be obtained as shown below e.g.
+
+			class MainActivity : ComponentActivity() {
+
+			    override fun onCreate(savedInstanceState: Bundle?) {
+				super.onCreate(savedInstanceState)
+
+				val myContext: context = this
+			    }
+			}
+
+		- Context can be liable to memory leaks:
+
+			1. An instance of Activity is created.
+			2. An instance of Application is created.
+			3. The Context within the Activity is assigned to a reference within the instance of Application.
+			4. The lifecycle of the Activity is different to the Application leading to a potential situation where the instance of Application has reference to a context within an Activity which no longer exists.
+
+			NB: Therefore Context should only used within its respective instance to ensure that they are always garbage collected alon with the instance of class. IDE will typically display a warning.
+
+	Resources:
+
+		- Resources can be any such:
+
+			Image		Vector Graphic
+			String		Animations
+			Text		Data
+			...
+
+			Anything that your program uses which is not source code. 
+
+		- Resources are typically/should be found with 'res' folder of project
 
 
 
@@ -407,6 +629,33 @@ Andriod Development:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
 
 
 
