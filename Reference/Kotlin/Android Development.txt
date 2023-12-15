@@ -594,11 +594,210 @@ Andriod Development:
 			Image		Vector Graphic
 			String		Animations
 			Text		Data
+			Icons
 			...
 
 			Anything that your program uses which is not source code. 
 
-		- Resources are typically/should be found with 'res' folder of project
+		- Resources are typically/should be found with 'res' folder of project:
+
+			res
+			    drawable:		Drawable graphics				val drawable = resources.getDrawable(R.drawable.myPicture)
+			    mipmap:		Icons
+			    values:		Constants e.g. colours, strings, labels		val colour = colorResource(id = R.color.myCustomColour)
+			    xml:		Backup/extraction definitions
+
+		- Resources are accessed/referenced within source code via:
+
+			Context:		Used when within a class that extends Context e.g. an extension of ComponentActivity
+
+							class MainActivity : CoponentActivity() {
+						    	    override fun onCreate(...) {
+								resources.getDrawable(...)
+
+			ApplicationContext:	Used when not within a class that extends Context:
+
+							applicaionContext.resources
+
+		- Resources all have an ID (Integer) which is accessed via R:
+
+			val drawable = resources.getDrawable(R.drawable.myPicture)		//R respresents the resources associated with the package, R must be imported (do not import the R from other packages by mistake)
+
+		- Resources typically are then just sent to screen using a Painter:
+
+			setContent {
+			    ActivitiesTheme {
+				Image (
+				    painter = painterResource(id = R.drawable.myPicture),
+				    contentDescription = null
+				    modifier = Modifier
+					.fillMaxWidth()
+				)
+
+		- Resources vector graphics are defined via *.xml file, importing a vector graphic e.g. *.svg/*.psd will automatically generate *.xml file
+		- Resources can be denoted with Qualifiers within () next to resource in project tree:
+
+			res
+			    drawable
+				myVectorGraphic.xml (v24)		//Only Andriod version 24 and above support resource
+			    mipmap
+				ic_launcher.webp (hdpi)			//Icon for applicable device
+
+			Qualifiers remove of the need to manually check which resources are available for which device the program is running on, qualifiers naturally handle/uses the correct/compatible resource:
+
+				1. Right Click:		res | drawable
+				2. Select:		New | Drawable Resource File
+				3. Import:		Import and define/apply qualifiers from list
+
+				NB: Android Studio will create new folders as new qualifiers are applied and place the resource within e.g.	'drawable-night'		//All resources associated with 'night' theme
+
+			Qualifiers can be useful e.g.
+
+				Screen Size:		Use certain resources dependent on screen size of device
+				Theme:			Use certain resources dependent upon the theme that is selected				
+			
+			Qualifiers can be combined to refine when resource is used.
+
+	Intents:
+
+		- Intents are intented to be means of encapsulating a description of an intention to be applied to another Android component either a component within your own App or another external App e.g.
+
+			Activity
+			Services
+			Broadcast
+
+		- Intents can be
+
+			Explcit:	Specifically targetted towards a specific program either own/local program or external program e.g. launch an activity of another program, say YouTube App.
+			Implicit:	Specific action where the OS will present the User with a Chooser on which applicable/appropriate program to send the Intent to and use e.g. open a text file, send an email
+
+		- Intent is a class within 'android.content':
+
+			Explicit Intent:
+
+				Button(onClick = {
+				    Intent(applicationContext, SecondActivity::class.java).also {	//Send intent to local App to instantiate 'SecondActivity'
+					startActivity(it)						//'it' is the receiver of the lamda which in this case is the Intent itself
+				    }
+				}
+
+				The above will cause the SecondActivity to launch when the button is pressed
+			    
+				Button(onClick = {
+				    Intent(Intent.ACTION_MAIN).also {					//Send intent to another App
+					it.'package' = "com.google.android.youtube"			//Ensure Intent knows the package of the targetted App to be open
+
+					if(it.resolveActivity(packageManager) != null) {		//Ensure that package exists on machine, if so start activity
+					    startActivity(it)
+					}
+
+					//Alternatively use try-catch block
+
+					try {
+					    startActivity(it)
+					} catch(e: ActivityNotFoundException)
+					{...}
+				    }
+				}
+
+				NB: Packages can be returned via:
+
+					1. Android Studio:	Terminal
+					2. Type:		adb shell
+					3. Type:		pm list packages
+					4. Type:		pm list packages | grep youtube		//Result of 'list packages' is forwarded to grep to search for term 'youtube'
+
+			Implicit Intent:
+
+				val intent = Intent(Intent.ACTION_SEND).apply {
+				    type = "text/plain"
+				    putExtra(Intent.EXTRA_EMAIL, arrayOf(test@test.com))
+				    putExtra(Intent.EXTRA_SUBJECT, "My Subject")
+				    putExtra(Intent.EXTRA_TEXT, "My Email Body")
+				}
+
+				if(intent.resolveActivity(packageManager) != null) {			//Ensure that package exists on machine, if so start activity in program that can handle 'Intent.ACTION_SEND'
+				    startActivity(intent)
+				}
+
+		- Intent objects can pass data to the target using 'extras' NB: ComponentActivity contains an inherent Intent object which is the 'receiver' of any incoming intents and can be referenced directly using simply 'intent.getStringExtra(name: String!)'
+		- Intents need to be include/specified at 'both ends' i.e. applications need to define how Intents are handled when being sent and received.
+		- Intents need to be included/specified with the manifest file:
+
+			Outgoing:
+
+				- Manifest file needs to include block specifiying the type of intent that the program will/can generate e.g.
+
+					<queries>
+					    <intent>
+						<action android:name="android.intent.action.SEND" />
+						<data android:mimeType="text/plain" />
+					    </intent>
+					</queries>
+
+			Incoming:
+
+				- Manifest file needs to include block specifiying the type of intent that the program can accept called 'Intent Filter' e.g.
+
+					<intent-filter>
+					    <action android:name="android.intent.action.MAIN" />
+					    <category android:name="android.intent.category.LAUNCHER" />
+					</intent-filter>
+
+					<intent-filter>									//Multiple filters can be applied
+					    <action android:name="android.intent.action.SEND" />
+					    <category android:name="android.intent.category.DEFAULT" />
+					    <data android:mimeType="image/jpg" />					//Could use wildcard "image/*" to include all image types
+					</intent-filter>   
+						
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
