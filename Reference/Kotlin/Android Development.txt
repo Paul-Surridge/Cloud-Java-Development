@@ -748,10 +748,162 @@ Andriod Development:
 					    <action android:name="android.intent.action.SEND" />
 					    <category android:name="android.intent.category.DEFAULT" />
 					    <data android:mimeType="image/jpg" />					//Could use wildcard "image/*" to include all image types
-					</intent-filter>   
-						
+					</intent-filter>
 
+				- Program will need to (of course) include the necessary logic/means to display the data contained in the Intent (which may be an image), if the program does not have means then nothing happens.
 
+					1. App receives an incoming Intent which contains an image.
+					2. OS will open a new Task of the App, whereby passing the Intent within MainActivty Class (as defined)
+					3. If the LaunchMode of the App is defined as 'SingleTop' then only x1 instance of the App can exist.
+					4. In which case MainActivity class should override onNewIntent() in order to handle/parse the incoming Intent.
+
+						override fun onNewIntent(intent: Intent?) {
+						    super.onNewIntent(intent)
+
+						    val uri = intent?.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+						}
+
+	Broadcasts:
+
+		- Broadcast is a system wide event that can be received and consumed.
+		- Broadcast is an intent sent to many Apps (rather than to a specific App).
+		- Broadcast can be issued by the OS or an App.
+		- Broadcast will include an Intent containing all of the relevant details about teh Broadcast.
+		- Broadcast examples include:
+
+			Boot:			Once the device is booted all programs are notified, should there be any initialisation/data request tasks that they need to perform.
+			Call:			Once the device receives an incoming call, any audio/music App's may mute.
+			Airplane Mode:		Once the device is in Airplane Mode App adjusts accordingly.
+
+		- Broadcast is sent e.g. via a Button:
+
+			Button(onClick = {
+			    sendBroadcast(Intent("TEST_ACTION"))		//Send a custom broadcast with the custom string "TEST_ACTION"
+			}){
+			    Text(text = "Send Broadcast")			//Trailing Lambda defines the label on the button
+			}
+
+		- Broadcast is consumed/handled via a Broadcast Receiver which is a class.
+
+			1. Create a class which extends 'BroadcastReceiver' to handle any incoming Broadcast:
+
+				class myBroadcastReceiver: BroadcastReceiver() {
+
+			    	    override fun onReceive(context: Context?, intent: Intent?) {
+					if(intent?.action == Intent.ACTION_AIRPLACE_MODE_CHANGED)		//Check the contents/nature/type of the Intent
+					{
+				    	    val isTurnedOn = Settings.Global.getInt(context?.contentResolver, Settings.Global.AIRPLANE_MODE_ON) != 0
+
+				    	    println("Is Airplane Mode on: $isTurnedOn")
+					}
+				    }
+				}
+
+			2. Register Receiver in MainActivty:
+
+				class MainActivity: ...
+				{
+				    private val airPlaneModeReceiver = AirplaneModeReceiver()
+
+				    override fun onCreate( ...
+					registerReceiver(airPlaneModeReceiver, IntentFilter(Intent.ACTION_AIRPLACE_MODE_CHANGED))
+
+				    ...
+
+				    override fun onDestroy() {
+					super.onDestry()
+					unregisterReciever(airPlaneModeReceiver)
+				    }
+				}
+
+			3. Unregister Receiver in MainActivity within onDestroy()
+
+		- Broadcast Receivers can be Dynamic or Static:
+
+			Dynamic:	- Created/destroyed explicitly as required.
+					- Only consumes/processes the event when App is running.
+					- Defined with in the source code.
+
+			Static:		- Consume/processes at all times even when App is not running e.g. Bootup.
+					- Notifications are limited in order to preserve battery.
+					- Defined within the manifest file.
+
+						<receiver android:name="...">
+						    <intent-filter>
+							...
+						    </intent-filter>
+						</receiver>
+
+					- If the Broadcast was issued by an App (opposed to OS) then the sending App must explicitly declare/define the target App and its package to receive/consume the Broadcast.
+
+	Services:
+
+		- Service is an application which run in the background:
+
+			Service:		Runs in background without UI, user unaware e.g. data retrieval/sync		OS can stop 	(at anytime when resources low)			Work Manager
+			Foreground Service:	Runs in backgroudd with UI, user aware e.g. music, running application		OS can not stop	(presumes user wants it running)		Most Common Form of Service
+
+		- Service is a component just like an activity but without a UI.
+		- Service is typically implemented/handled within a class which extends 'Service' and overrides applicable functions, for full demo template:
+
+			https://www.youtube.com/watch?v=YZL-_XJSClc&list=PLQkwcJG4YTCSVDhww92llY3CAnc_vUhsm&index=8
+
+		- Service and permissions need to be declared within manifest (as with any Android component).
+
+	Work Manager
+
+		- Work Manager is a facility provided by the OS.
+		- Work Manager provides the ability to run long running or periodic tasks in the background safely with guarantee that they will always run and not be stopped by OS.
+		- Work Manager creates 'workers' by extending 'CoroutineWorker', I presume back ground threads in order for the work to be completed, for full demo:
+
+			https://www.youtube.com/watch?v=A2JetouoNSc&list=PLQkwcJG4YTCSVDhww92llY3CAnc_vUhsm&index=9
+
+		- Work Manager 'workers' are expected to finish as some point in time, not to run indefinitely, therefore such conditions need to be added to the defined Worker.
+
+	URI:
+
+		- URI (Unique Resource Identifier) may refer to any resources on the device.
+		- URI is a path to a specific resource.
+		- URI are unlike a constant/fixed path in Windows/OS which is a path to a file/resource where always have permission to access, but rather formed of x4 differing types:
+
+			Resource	File
+			Data		Content
+
+			class MainActivity : ComponentActivity() {
+			    override fun onCreate(...)
+			    {
+				val uri = Uri.parse("android.resource://$packageName/drawable/myPicture.jpg")			//Resource URI
+				val file = FIle(filesDir, myPicture.jpg)							//File URI
+				val data = Uri.parse("data:text/plain;charset=UTF-8,Hello&20World")				//Data URI
+			    }
+			}
+
+		- URI can be passed between Apps however it may be likely that there will be permission issues, therefore URI's should primarily be used within own App only.
+		- URI require specific considerations when being used to ensure that permissions are handled appropriately
+		- URI interact with App memory/storage:
+
+			Internal:	Apps contain their own internal private file system
+			External:	Apps may access shared external storage
+
+	Content Providers:
+
+		- Content Providers are mechanisms within your App to provide content/resources to other external Apps.
+		- Content Providers are exposed by Apps for use/consumption by other Apps e.g.
+
+			Contacts:	A native Contacts List App includes a Content Provider of those contacts for use by another App.
+			Calendar:	A native Calendar App includes a Content Provider that issues/sends all calendar events to another App which subscribes/consumes those events.
+			Media Store:	Common Content Provider of all media aspects within device
+
+		- Content Providers typically provide an advanced API for sorting/querying/filtering content and its metadata similar to database.
+		- Content Providers can be included within own App as per demo:
+
+			https://www.youtube.com/watch?v=IVHZpTyVOxU&list=PLQkwcJG4YTCSVDhww92llY3CAnc_vUhsm&index=11
+
+	Coroutines:
+
+		- Coroutines are very light weight entities executed within a thread.
+		- Coroutines are suspendable.
+		- Coroutines can switch context.
 
 
 
