@@ -78,7 +78,7 @@ Andriod Development:
 
 		- Composable functions are said to 'emit UI'.
 		- Composable functions do not return anything.
-		- Composable functions can call other Composable Functions.
+		- Composable functions can (and the only other functions) able to call other Composable Functions.
 		- Composable functions are declarative i.e. they are specified not to be built/instantiated in any particular order but simply declared and the compiler scans, builds and maintains their implemention as it best sees fit. 
 		- Composable functions cannot be referenced i.e. it is not possible to hold a reference to them and later update its content (you need to call again with differing arguments).
 		- Composable functions should not call Global variable or properties.
@@ -108,6 +108,17 @@ Andriod Development:
 			NOT an adjective: 					Bright()
 			NOT an adverb: 						Outside()
 			Nouns MAY be prefixed by descriptive adjectives: 	RoundIcon()
+
+	Layouts
+
+		- Layouts and UI elements are heirarchical with elements within elements.
+		- Layouts and heirarchies within Compose are constructed by calling composable functions from other composable functions.
+
+			@Composable
+			fun MessageCard(msg: Message) {		//x2 Text composables are contained with the MessageCard composable 
+			    Text(text = msg.author)
+			    Text(text = msg.body)
+			}
 
 	Annotations:
 
@@ -253,6 +264,19 @@ Andriod Development:
 
 			@Preview(fontScale = 1.5f)
 			@Preview(showBackground = true ...
+
+		- Previews can only be applied to composables which do not take any parameters, therefore wrap accordingly:
+
+			@Composable
+			fun MessageCard(name: String) {
+			    Text(text = "Hello $name")
+			}
+
+			@Preview
+			@Composable
+			fun PreviewMessageCard() {			//Wrap the MessageCard function within a function which does not contain parameters so that it can be previewed 
+			    MessageCard("World")
+			}
 
 		- Previews can be encorporated into custom annotations:
 
