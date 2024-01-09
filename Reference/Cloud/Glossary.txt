@@ -98,12 +98,21 @@ Glossary:
 
 		- Development methodology whereby incremental changes to a program are continually and immediately pushed to production.
 
+	Continuous Integration:
+
+		- Development methodology whereby incremental changes are continually built and tested, whereby ensuring that there is always a testable build and avoid merge conflucts.
+
 	Control Groups (cgroups):
 
 		- Similar to namespacing which isolate resources from processes.
 		- Control Groups limit resources from processes (not isolate/segregate completely).
 		- Control Groups may limit CPU, network bandwidth, HD I/O.
 		- Linux only (not Windows/MacOS).
+
+	DevSecOps:
+
+		- Extension of DevOps culture with a greater empathsis on security, compliance, risk mitigation and observability of all the states within the development pipeline.
+		- Typically employing additional stages of TDD, Pairing, linting, scanning and ensuring the integrity and validity of all stages within the pipeline.
 
 	Docker Client:
 

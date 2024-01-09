@@ -191,3 +191,18 @@ Please find a repository containing the following:
 	70.	Singleton - Multiton
 	71.	Singleton - Serialisation
 	72.	Singleton - Static Block Initialisation
+
+	Kotlin
+	__________________________________________________________________________________________________________
+
+	1. 	Annotations
+	2.	Class
+	3. 	Collections
+	4.	Functions
+	5. 	Lambda Expressions
+	6.	Language
+	7. 	Library
+	8.	Nullabe non-Nullable
+	9. 	Objects
+	10.	Sequences
+	11. 	Types
