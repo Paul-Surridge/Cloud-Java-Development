@@ -189,15 +189,25 @@ Glossary:
 									6. Functional:			Components contribute to a single well-defined task.
 							[Best]		7. Atomic:			Components do not utilise any external aspects except the input to compute and generate its output.
 
-	Combination:				Given a set [A B C D E F]:
+	Combination:				Combination is the specific 'make-up' of characters irrespective of order e.g. given a set [A B C D], if considering only x2 letters out of the x4:
 
-							Combination:	Any subset irrespective of ordering:
+							AB	BA	CA	DA
+							AC	BC	CB	DB
+							AD	BD	CD	DC
 
-									[A B C]
-									[B A C]
-									[C A B]
+							Here:
 
-									The above are all the same combination, they are the same combination of elements irrespectove of ordering.
+								Permutations:	12
+								Combinations:	6	Given AB and BA are the same combination (but not the same permutation).
+
+						Given a set [A B C]:
+
+							Permutations are:
+
+									[A B C]	[B A C] [C B A]
+									[A C B]	[B C A] [C A B]
+
+							Therefore a set of N size will have N! permutations (but only one combination).
 
 	Compatible:				Two objects are compatible if one is the extension of another and it is possible to assign a subclass to a superclass reference variable.
 
@@ -720,17 +730,25 @@ Glossary:
 
 	Parse:					Itemises data into constituent pieces e.g. a sentence into individual words.
 
-	Permutation:				Given a set [A B C]:
+	Permutation:				Permutation is the specific 'arrangement' of characters e.g. given a set [A B C D], if considering only x2 letters out of the x4:
 
-							Permutation:	The specific ordering of elements:
+							AB	BA	CA	DA
+							AC	BC	CB	DB
+							AD	BD	CD	DC
 
-									[A B C]
-									[B A C]
-									[C A B]
+							Here:
 
-									The above are all valid permutations of the set.
+								Permutations:	12
+								Combinations:	6	Given AB and BA are the same combination (but not the same permutation).
 
-							Therefore a set of N size will have N! permutations (but only one combination)
+						Given a set [A B C]:
+
+							Permutations are:
+
+									[A B C]	[B A C] [C B A]
+									[A C B]	[B C A] [C A B]
+
+							Therefore a set of N size will have N! permutations (but only one combination).
 
 	Piecewise:				Creation of an object in incremental stages.
 
