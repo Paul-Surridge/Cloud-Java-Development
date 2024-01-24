@@ -15,18 +15,213 @@ Utility Functions (Built-in)
 			String(byte[] bytes, int offset, int length)				Convert byte[] to String from offset for length bytes
 			String(byte[] bytes, int offset, int length, Charset charset)		Convert byte[] to String from offset for length bytes using the supplied Charset
 			String(byte[] bytes, int offset, int length, String charsetName)	Convert byte[] to String from offset for length bytes using the supplied Charset
-			String(byte[] bytes, String charsetName)
-			String(char[] value)
-			String(char[] value, int offset, int count)
-			String(int[] codePoints, int offset, int count)
-			String(String original)
-			String(StringBuffer buffer)
-			String(StringBuilder builder)
+			String(byte[] bytes, String charsetName)				Convert byte[] to String using the supplied Charset
+			String(char[] value)							Convert char[] to String
+			String(char[] value, int offset, int count)				Convert char[] to String using offset and count
+			String(int[] codePoints, int offset, int count)				Convert int[] to String using offset and count, the int values are interpreted using unicode and narrrowed/converted to chars (16 bit)
+			String(String original)							Convert String to String
+			String(StringBuffer buffer)						Convert StringBuffer to String
+			String(StringBuilder builder)						Convert StringBuilder to String
+
+			char		charAt(int i)				Return the char at i
+
+			int		codePointAt(int i)			Return the int at/before i which can then be interpreted as unicode
+			int		codePointBefore(int i)
+
+			int		codePointCounts(int iStart, int iEnd)	Return the number of code points between iStart and iEnd-1. Unpaired surrogates within the text range count as one code point each.
+
+			int		compareTo(String s)			Compre lexicographically (dictionary order)
+			int		compareToIgnoreCase(String s)
+											this < s	Negative
+											this == s	0
+											this > s	Positive
+
+											The value returned is the difference between the first x2 characters which differ. If one is a prefix of the other then the difference in length is returned.
+
+			String		concat(String s)			Return this + s
+
+			boolean		contains(CharSequence cs)		Check if this contains cs
+
+			boolean		contentEquals(CharSequence cs)		Check if this contains the smae characters as cs/sb
+			boolean		contentEquals(StringBuffer sb)
+
+		static	String		copyValueOf(char[] a)			Convert the char[] to String, creates a copy therefore subsequent changes to returned string does not effect original char[]. Calls valueOf(char[] a).
+		static	String		copyValueOf(char[] a,
+						    int iOffset,int iCount)	
+
+			boolean		endsWith(String s)			Check if this ends with suffix s.
+
+			boolean		equals(Object obj)			Check if obj/s is not null, a string and matches this
+			boolean		equalsIgnorecase(String s)		
+
+		static	String		format(String s, Object...)		Generate a string which adheres to the format string inconjunction with the Locale and any Objects.
+					format(Locale l, String s, Object...)
+										[To be expanded]
+
+			byte[]		getBytes()				Parse this into an array of bytes using the default/supplied charset.
+					getBytes(Charset cs)
+					getBytes(String charset)
+
+			void		getChars(int iSourceBegin,		Copies the characters of this into sDestination.
+						 int iSourceEnd,
+						 char[] sDestination,			[iSourceBegin - iSourceEnd)	Using standard Inclusive to exlusive
+						 int iDestinationStart)
+										Copies characters:
+
+											Source:
+
+												From:	iSourceBegin
+												To:	iSourceEnd - 1
+
+												Length:	iSourceEnd - iSourceBegin
+
+											Destination:
+
+												From:	iDestinationStart
+												To:	iDestinationStart + iSourceEnd - iSourceBegin - 1
+
+			int		hashCode()				Returns hash code for this.
+
+			int		indexOf(int ch)				Return the index of the first instance/occurence of ch/s (the character is represented using an int) or -1
+			int		indexOf(int ch, int fromIndex)
+			int		indexOf(String s)
+			int		indexOf(String s, int fromIndex)
+
+			String		inter()					Return the internal canonical (presume cached) representation for this String object.
+
+											A pool of strings is maintained privately within the actual class of String
+
+										Returns the String with the same characters as this but is guaranteed to be from a pool of unique strings.
+
+			boolean		isEmpty()				Return length() == 0
+
+		static	String		join(CharSequence delim,
+					     CharSequence... elements)		Returns constructed String using varargs/Iterable<? extends CharSequence> with delimiter inbetween
+					join(CharSequence delim,
+					     Iterable<? extends CharSequence>)		String.join("-", "Java", "is", "a programmng language");
+														
+											returns:	"Java-is-a programmng language!
+
+			int		lastIndexOf(int ch)			Return the index of the last instance/occurence of ch/s (the character is represented using an int) or -1
+			int		lastIndexOf(int ch, int fromIndex)
+			int		lastIndexOf(String s)
+			int		lastIndexOf(String s, int fromIndex)
+
+			int		length()				Return length of this string
+
+			boolean 	matches(String sRegex)			Check if this matches the supplied regular expression
+
+			int		offsetByCodePoints(int index,		Returns the index within this that is offset by offset number of code points
+							   int offset)
+
+			boolean 	regionMatches(int thisOffset,		Checks if x2 substrings within this and s using the offsets of length len characters are the same:
+						      String s,
+						      int stringOffset,
+						      int len)
+			boolean 	regionMatches(boolean ignoreCase,
+						      int thisOffset,
+						      String s,
+						      int stringOffset,
+						      int len)
+
+			String		replace(char cOld, char cNew)		Replace all instances in this of cOld with cNew, if no cOld is found then reference to this is returned (not a new copy of this)
+
+			String		replace(CharSequence cOld,		Replace all instances in this of cOld with cNew, if no cOld is found then reference to this is returned (not a new copy of this)
+						CharSequence cNew)
+											String s = "aaa"
+
+											s.replace("aa", "b")	//"ba" not "ab"
+
+			String 		replaceAll(String sRegex, String s)	Replace all/first substrings which match sRegex with s within this.
+					replaceFirst(String sRegex, String s)
+											NB: \ and $ in s may cause unexpected results if expected to be literal
+											    Use Matcher.quoteReplacement(java.lang.String) to suppress the special meaning of these characters.
+
+			String[]	split(String sRegex)			Returns String[] which contains the fragments of this which is split using delimiters which match the regular expression, limit is as follows:
+					split(String sRegex, int iLimit)
+											Limit determines the length of returned array
+											Limit <=0 then limit is discarded and array can be any length
+
+										Trailing empty strings are discarded.
+
+			boolean		startsWith(String s)			Check if this starts with prefix and/or with initial offset.
+			boolean		startsWith(String s, int offset)
+
+			CharSequence	subSequence(int iStart, int iEnd)	Return characters subsequence of this. NB: This method is only included so that String can implement CharSequence interface.
+
+			String		subString(int iStart)			Return the substring between iStart (inclusive) and iEnd (exclusive)
+			String		subString(int iStart, int iEnd)
+											From:	iStart
+											To:	iEnd - 1
+
+											Length:	iEnd - iStart
+
+			char[]		toCharArray()				Convert characters in this to char[].
+
+			String		toLowerCase()				Convert to upper/lower case using default or supplied Locale, care should be used to ensure conversion is as expected when using Locale.
+					toLowerCase(Locale locale)
+					toUpperCase()				
+					toUpperCase(Locale locale)
+
+			String		toString()				Returns this (not a copy)
+
+			String		trim()					Remove all leading and trailing whitespace
+
+		static	String		valueOf(boolean b)			Convert boolean to String:	true or false
+		static	String		valueOf(char c)				Convert char to String
+		static	String		valueOf(char[] ca)			Convert char[] to String, creates a copy therefore subsequent changes to returned string does not effect original char[]. Calls valueOf(char[] a).
+		static	String		valueOf(char[] ca,			Convert char[] with offset and length, iOffset + iCount must not go out of bounds i.e. this would need to be worked out prior to invocation
+						int iOffset,
+						int iCount)
+		static	String		valueOf(double d)			Convert double to String:	Equivalent to:		Double.toString()
+		static	String		valueOf(float f)			Convert float to String:	Equivalent to:		Float.toString()
+		static	String		valueOf(int i)				Convert int to String:		Equivalent to:		Integer.toString()
+		static	String		valueOf(long l)				Convert long to String:		Equivalent to:		Long.toString()
+		static	String		valueOf(Object obj)			Convert object to String:	Equivalent to:		Object.toString()
 
 
 
-			Integer(int i)						Convert int to Integer (Box)
-			Integer(String s)					Convert String to Integer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		static	String		valueOf(char[] a)			
+			
+
+
+
+
+
+
+
+		Character/SubString Extraction
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 
 
 		Conversion:
