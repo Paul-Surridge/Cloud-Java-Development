@@ -10,57 +10,63 @@ Utility Functions (Built-in)
 		Constructors:
 		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-			String(byte[] bytes)							Convert byte[] to String
-			String(byte[] bytes, Charset charset)					Convert byte[] to String using the supplied Charset
-			String(byte[] bytes, int offset, int length)				Convert byte[] to String from offset for length bytes
-			String(byte[] bytes, int offset, int length, Charset charset)		Convert byte[] to String from offset for length bytes using the supplied Charset
-			String(byte[] bytes, int offset, int length, String charsetName)	Convert byte[] to String from offset for length bytes using the supplied Charset
-			String(byte[] bytes, String charsetName)				Convert byte[] to String using the supplied Charset
-			String(char[] value)							Convert char[] to String
-			String(char[] value, int offset, int count)				Convert char[] to String using offset and count
-			String(int[] codePoints, int offset, int count)				Convert int[] to String using offset and count, the int values are interpreted using unicode and narrrowed/converted to chars (16 bit)
-			String(String original)							Convert String to String
-			String(StringBuffer buffer)						Convert StringBuffer to String
-			String(StringBuilder builder)						Convert StringBuilder to String
+			String(byte[] bytes)					byte[] 		-> String
+			String(byte[] bytes, Charset charset)			byte[] 		-> String 		Using the supplied Charset
+			String(byte[] bytes, int offset, int length)		byte[] 		-> String 		From offset for length bytes
+
+			String(byte[] bytes, int offset, int length,
+			       Charset charset)					byte[] 		-> String 		From offset for length bytes using the supplied Charset
+
+			String(byte[] bytes, int offset, int length,
+			       String charsetName)				byte[] 		-> String 		From offset for length bytes using the supplied Charset
+
+			String(byte[] bytes, String charsetName)		byte[] 		-> String 		Using the supplied Charset
+			String(char[] value)					char[] 		-> String
+			String(char[] value, int offset, int count)		char[] 		-> String 		Using offset and count
+			String(int[] codePoints, int offset, int count)		int[] 		-> String 		Using offset and count, the int values are interpreted using unicode and narrrowed/converted to chars (16 bit)
+			String(String original)					String 		-> String
+			String(StringBuffer buffer)				StringBuffer 	-> String
+			String(StringBuilder builder)				StringBuilder 	-> String
+
+		Conversion:
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			byte[]		getBytes()				this 		-> byte[]		Using the default/supplied charset.
+					getBytes(Charset cs)
+					getBytes(String charset)
+
+			char[]		toCharArray()				this 		-> char[]
+
+			String		toLowerCase()				this 		-> upper/lower case 	Using default or supplied Locale, care should be used to ensure conversion is as expected when using Locale.
+					toLowerCase(Locale locale)
+					toUpperCase()				
+					toUpperCase(Locale locale)
+
+		static	String		copyValueOf(char[] a)			char[] 		-> String 		Calls valueOf(char[] a).
+		static	String		copyValueOf(char[] a,
+						    int iOffset,int iCount)	
+
+		static	String		valueOf(boolean b)			boolean 	-> String 		"true" or "false"
+		static	String		valueOf(char c)				char 		-> String
+		static	String		valueOf(char[] ca)			char[] 		-> String
+		static	String		valueOf(char[] ca,			char[] 		-> String 		With offset and length, iOffset + iCount must not go out of bounds i.e. this would need to be worked out prior to invocation
+						int iOffset,
+						int iCount)
+		static	String		valueOf(double d)			double 		-> String		Equivalent to: Double.toString()
+		static	String		valueOf(float f)			float 		-> String		Equivalent to: Float.toString()
+		static	String		valueOf(int i)				int 		-> String		Equivalent to: Integer.toString()
+		static	String		valueOf(long l)				long 		-> String		Equivalent to: Long.toString()
+		static	String		valueOf(Object obj)			object 		-> String		Equivalent to: Object.toString()
+
+			String		toString()				Returns this (not a copy)
+
+		Extraction:
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 			char		charAt(int i)				Return the char at i
 
 			int		codePointAt(int i)			Return the int at/before i which can then be interpreted as unicode
 			int		codePointBefore(int i)
-
-			int		codePointCounts(int iStart, int iEnd)	Return the number of code points between iStart and iEnd-1. Unpaired surrogates within the text range count as one code point each.
-
-			int		compareTo(String s)			Compre lexicographically (dictionary order)
-			int		compareToIgnoreCase(String s)
-											this < s	Negative
-											this == s	0
-											this > s	Positive
-
-											The value returned is the difference between the first x2 characters which differ. If one is a prefix of the other then the difference in length is returned.
-
-			String		concat(String s)			Return this + s
-
-			boolean		contains(CharSequence cs)		Check if this contains cs
-
-			boolean		contentEquals(CharSequence cs)		Check if this contains the smae characters as cs/sb
-			boolean		contentEquals(StringBuffer sb)
-
-		static	String		copyValueOf(char[] a)			Convert the char[] to String, creates a copy therefore subsequent changes to returned string does not effect original char[]. Calls valueOf(char[] a).
-		static	String		copyValueOf(char[] a,
-						    int iOffset,int iCount)	
-
-			boolean		endsWith(String s)			Check if this ends with suffix s.
-
-			boolean		equals(Object obj)			Check if obj/s is not null, a string and matches this
-			boolean		equalsIgnorecase(String s)		
-
-		static	String		format(String s, Object...)		Generate a string which adheres to the format string inconjunction with the Locale and any Objects.
-					format(Locale l, String s, Object...)
-										[To be expanded]
-
-			byte[]		getBytes()				Parse this into an array of bytes using the default/supplied charset.
-					getBytes(Charset cs)
-					getBytes(String charset)
 
 			void		getChars(int iSourceBegin,		Copies the characters of this into sDestination.
 						 int iSourceEnd,
@@ -80,20 +86,25 @@ Utility Functions (Built-in)
 												From:	iDestinationStart
 												To:	iDestinationStart + iSourceEnd - iSourceBegin - 1
 
-			int		hashCode()				Returns hash code for this.
+			CharSequence	subSequence(int iStart, int iEnd)	Return characters subsequence of this. NB: This method is only included so that String can implement CharSequence interface.
 
-			int		indexOf(int ch)				Return the index of the first instance/occurence of ch/s (the character is represented using an int) or -1
-			int		indexOf(int ch, int fromIndex)
-			int		indexOf(String s)
-			int		indexOf(String s, int fromIndex)
+			String		subString(int iStart)			Return the substring between iStart (inclusive) and iEnd (exclusive)
+			String		subString(int iStart, int iEnd)
+											From:	iStart
+											To:	iEnd - 1
 
-			String		inter()					Return the internal canonical (presume cached) representation for this String object.
+											Length:	iEnd - iStart
 
-											A pool of strings is maintained privately within the actual class of String
+		Format:
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-										Returns the String with the same characters as this but is guaranteed to be from a pool of unique strings.
+		static	String		format(String s, Object...)		Generate a string which adheres to the format string inconjunction with the Locale and any Objects.
+					format(Locale l, String s, Object...)
+										[To be expanded]
 
-			boolean		isEmpty()				Return length() == 0
+			String		trim()					Remove all leading and trailing whitespace
+
+			String		concat(String s)			Return this + s
 
 		static	String		join(CharSequence delim,
 					     CharSequence... elements)		Returns constructed String using varargs/Iterable<? extends CharSequence> with delimiter inbetween
@@ -102,27 +113,24 @@ Utility Functions (Built-in)
 														
 											returns:	"Java-is-a programmng language!
 
+		Find Index (Within):
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			int		indexOf(int ch)				Return the index of the first instance/occurence of ch/s (the character is represented using an int) or -1
+			int		indexOf(int ch, int fromIndex)
+			int		indexOf(String s)
+			int		indexOf(String s, int fromIndex)
+
 			int		lastIndexOf(int ch)			Return the index of the last instance/occurence of ch/s (the character is represented using an int) or -1
 			int		lastIndexOf(int ch, int fromIndex)
 			int		lastIndexOf(String s)
 			int		lastIndexOf(String s, int fromIndex)
 
-			int		length()				Return length of this string
-
-			boolean 	matches(String sRegex)			Check if this matches the supplied regular expression
-
 			int		offsetByCodePoints(int index,		Returns the index within this that is offset by offset number of code points
 							   int offset)
 
-			boolean 	regionMatches(int thisOffset,		Checks if x2 substrings within this and s using the offsets of length len characters are the same:
-						      String s,
-						      int stringOffset,
-						      int len)
-			boolean 	regionMatches(boolean ignoreCase,
-						      int thisOffset,
-						      String s,
-						      int stringOffset,
-						      int len)
+		Replace:
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 			String		replace(char cOld, char cNew)		Replace all instances in this of cOld with cNew, if no cOld is found then reference to this is returned (not a new copy of this)
 
@@ -137,6 +145,9 @@ Utility Functions (Built-in)
 											NB: \ and $ in s may cause unexpected results if expected to be literal
 											    Use Matcher.quoteReplacement(java.lang.String) to suppress the special meaning of these characters.
 
+		Split:
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 			String[]	split(String sRegex)			Returns String[] which contains the fragments of this which is split using delimiters which match the regular expression, limit is as follows:
 					split(String sRegex, int iLimit)
 											Limit determines the length of returned array
@@ -144,71 +155,69 @@ Utility Functions (Built-in)
 
 										Trailing empty strings are discarded.
 
+		Comparison:
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			int		compareTo(String s)			Compare lexicographically (dictionary order)
+			int		compareToIgnoreCase(String s)
+											this < s	Negative
+											this == s	0
+											this > s	Positive
+
+											The value returned is the difference between the first x2 characters which differ. If one is a prefix of the other then the difference in length is returned.
+
+			boolean		equals(Object obj)			Check if obj/s is not null, a string and matches this
+			boolean		equalsIgnorecase(String s)		
+
+		Contains Check:
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			boolean		contains(CharSequence cs)		Check if this contains cs
+
+			boolean		contentEquals(CharSequence cs)		Check if this contains the smae characters as cs/sb
+			boolean		contentEquals(StringBuffer sb)
+
+			boolean		endsWith(String s)			Check if this ends with suffix s.
 			boolean		startsWith(String s)			Check if this starts with prefix and/or with initial offset.
 			boolean		startsWith(String s, int offset)
 
-			CharSequence	subSequence(int iStart, int iEnd)	Return characters subsequence of this. NB: This method is only included so that String can implement CharSequence interface.
+			boolean 	regionMatches(int thisOffset,		Checks if x2 substrings within this and s using the offsets of length len characters are the same.
+						      String s,
+						      int stringOffset,
+						      int len)
 
-			String		subString(int iStart)			Return the substring between iStart (inclusive) and iEnd (exclusive)
-			String		subString(int iStart, int iEnd)
-											From:	iStart
-											To:	iEnd - 1
+			boolean 	regionMatches(boolean ignoreCase,
+						      int thisOffset,
+						      String s,
+						      int stringOffset,
+						      int len)
 
-											Length:	iEnd - iStart
+			boolean 	matches(String sRegex)			Check if this matches the supplied regular expression
 
-			char[]		toCharArray()				Convert characters in this to char[].
+		State:
+		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-			String		toLowerCase()				Convert to upper/lower case using default or supplied Locale, care should be used to ensure conversion is as expected when using Locale.
-					toLowerCase(Locale locale)
-					toUpperCase()				
-					toUpperCase(Locale locale)
+			boolean		isEmpty()				Return length() == 0
 
-			String		toString()				Returns this (not a copy)
+			int		length()				Return length of this string
 
-			String		trim()					Remove all leading and trailing whitespace
+			int		hashCode()				Returns hash code for this.
 
-		static	String		valueOf(boolean b)			Convert boolean to String:	true or false
-		static	String		valueOf(char c)				Convert char to String
-		static	String		valueOf(char[] ca)			Convert char[] to String, creates a copy therefore subsequent changes to returned string does not effect original char[]. Calls valueOf(char[] a).
-		static	String		valueOf(char[] ca,			Convert char[] with offset and length, iOffset + iCount must not go out of bounds i.e. this would need to be worked out prior to invocation
-						int iOffset,
-						int iCount)
-		static	String		valueOf(double d)			Convert double to String:	Equivalent to:		Double.toString()
-		static	String		valueOf(float f)			Convert float to String:	Equivalent to:		Float.toString()
-		static	String		valueOf(int i)				Convert int to String:		Equivalent to:		Integer.toString()
-		static	String		valueOf(long l)				Convert long to String:		Equivalent to:		Long.toString()
-		static	String		valueOf(Object obj)			Convert object to String:	Equivalent to:		Object.toString()
+			int		codePointCounts(int iStart, int iEnd)	Return the number of code points between iStart and iEnd-1. Unpaired surrogates within the text range count as one code point each.
+
+			String		inter()					Return the internal canonical (presume cached) representation for this String object.
+
+											A pool of strings is maintained privately within the actual class of String
+
+										Returns the String with the same characters as this but is guaranteed to be from a pool of unique strings.
 
 
-
+		
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		static	String		valueOf(char[] a)			
 			
 
 
@@ -217,264 +226,34 @@ Utility Functions (Built-in)
 
 
 
-		Character/SubString Extraction
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+			
 
 
+			
 
-		Conversion:
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-			byte		byteValue()				Convert 'this' to byte value after narrowing
-			double		doubleValue()				Convert 'this' to double after widening
-			float		floatValue()				Convert 'this' to float after widening
-			int		intValue()				Convert 'this' to int (unbox)
-			long		longValue()				Convert 'this' to long after widening
-			short		shortValue()				Convert 'this' to short value after narrowing
 
 
-		Conversion: String to Integer/int
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		static	Integer		decode(String s)			Convert s to Decimal, Octal or Hex:
 
-											Decimal:	123
-											Octal:		0123
-											Hex:		0x123		0X123		#123
-							
-											No whitespace
-											No underscore
-											Leading zeros ignored
-											-+ sign optional
 
-		static 	int		parseInt(String s)			Convert s to int:
-		static 	int		parseUnsignedInt(String s)
-											"123"			123
-											"-123"			-123
-											"+123"			123
 
-		static 	int		parseInt(String s, int radix)		Convert s to int using radix:
-		static 	int		parseUnsignedInt(String s, int radix)
-											("0", 10) 		0
-											("473", 10) 		473
-											("+42", 10) 		42
-											("-0", 10) 		0
-											("-FF", 16) 		-255
-											("1100110", 2) 		102
-											("2147483647", 10) 	2147483647
-											("-2147483648", 10) 	-2147483648
-											("2147483648", 10) 	throws a NumberFormatException
-											("99", 8) 		throws a NumberFormatException
-											("Kona", 10) 		throws a NumberFormatException
-											("Kona", 27) 		411787
 
-											Character/Digits in s must exist within range of radix:
 
-												Oct:		0-7
-												Dec:		0-9
-												Hex:		0-9 A-F
 
-											Radix:	Character.MIN_RADIX - Character.MAX_RADIX.
-											s cannot be null or ""
-											s cannot be a value larger than int (32 bit)
 
-											Characters:	0-9 and a-z are available should large radix be supplied
 
-		static	Integer		valueOf(String s)			Convert s to an Integer interpreted as a signed decimal, equivalent to:
-		static	Integer		valueOf(String s, int radix)
-											new Integer(IntegerparseInt(s))
-											new Integer(IntegerparseInt(s, radix))
 
-											Exception thrown if s not valid
 
-		Conversion: Integer/int to String (All Bases)
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		static	String		toBinaryString(int i)			Convert i to unsigned binary string of 0 and 1 ASCII:
 
-											i:	1,107,824,706
-											return: 100 0010 0000 1000 0001 0000 0100 0010
 
-											i:	-8
-											return:	1111 1111 1111 1111 1111 1111 1111 1000
 
-											Leading 0's removed
 
-		static	String		toHexString(int i)			Convert i to hex string of 0-9 a-f ASCII:
 
-											i:	1,237,924,706
-											return: 49c93b62
 
-											Leading 0's removed
-											If uppercase required use:	String.toHexString(1237924706).toUpperCase();
-
-		static	String		toOctalString(int i)			Convert i to octal string of 0-7 ASCII:
-
-											i:	1,237,924,706
-											return: 11162235542	[No commas]
-
-											Leading 0's removed
-
-			String		toString()				Convert i to decimal string of 0-9 ASCII or using radix:
-		static	String		toString(int i)
-		static	String		toString(int i, int radix)			i:	1,237,924,706
-											return: 1237924706	[No commas]	
-
-											Leading 0's removed
-											If uppercase required use:	String.toString(1237924706, 16).toUpperCase();
-											Radix:	Character.MIN_RADIX - Character.MAX_RADIX.
-
-											Characters:	0-9 and a-z are available should large radix be supplied
-
-		static	String		toUnsignedString(int i)			Convert signed i to unsigned String:
-		static	String		toUnsignedString(int i, int radix)
-											i:	1
-											return:	1
-
-											i:	2^32/2 - 1	(2,147,483,647)
-											return:	"2147483647"
-
-											i:	-1
-											return:	"4294967295"
-
-											i:	-2,147,483,648
-											return:	"2147483648"
-
-											i:	-2,147,483,647
-											return:	"2147483649"
-
-											Same as:	toUnsignedLong(int i).toString()
-
-		Conversion: Integer/int to long (unsigned)
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		static	long		toUnsignedLong(int i)			Convert signed i to unsigned long:
-
-											i:	1
-											return:	1
-
-											i:	2^32/2 - 1	(2,147,483,647)
-											return:	2147483647
-
-											i:	-1
-											return:	4294967295
-
-											i:	-2,147,483,648
-											return:	2147483648
-
-											i:	-2,147,483,647
-											return:	2147483649
-
-		static	Integer		valueOf(int i)				Convert int i to an Integer.
-
-											If a new Integer instance is not required*, this should be used compared to using constructor due to caching leading to better time/space complexity.
-											Method will always cache -128 - 127 (sometimes values outside of this range also)
-
-											*Documentation states 'not required' but presume a new instance of Integer is always returned from valueOf(int i)?
-
-		Bitwise Operations
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		static	int		bitCount(int i)				Number of 1's in i
-
-		static	int 		highestOneBit(int i)			Return 0, 1, 2, 4, 8 ... representing the position of the first (most right/significant) bit in i interpreted as 2-complement:
-
-											Integer.highestOneBit(8):	8
-											Integer.highestOneBit(10):	8
-											Integer.highestOneBit(6):	4
-
- 		static	int 		lowestOneBit(int i)			Return 0, 1, 2, 4, 8 ... representing the position of the last (least left/significant) bit in i interpreted as 2-complement:
-
-											Integer.lowestOneBit(11):	1
-											Integer.lowestOneBit(10):	2
-											Integer.lowestOneBit(8):	8
-
-		static	int		numberOfLeadingZeros(int i)		Return the number of 0's preceding the left most bit (MSB) as interpreted using 2-complement:
-
-											i = 0000 0000 0000 0000 0000 0000 0000 0001		31
-											i = 0001 0010 0001 0000	0100 0000 1000 0010		3
-											i = 0101 0010 0001 0001	0000 0010 0001 0000		1
-
-		static	int		numberOfTrailingZeros(int i)		Return the number of 0's after the right most bit (LSB) as interpreted using 2-complement:
-
-											i = 0000 0000 0000 0000 0000 0000 0000 0001		0
-											i = 0001 0010 0001 0000	0100 0000 1000 0010		1
-											i = 0101 0010 0001 0001	0000 0010 0001 0000		4
-
-											NB: The documentation states that is interpreted using 2-complement but the return value seems to include the sign bit (Left most bit)?
-
-		static 	int		reverse(int i)				Reverse the bits as represented using 2-complement:
-
-											i:	0001 0010 0001 0000 0100 0000 1000 0010		303,054,978
-											return:	0100 0001 0000 0010 0000 1000 0100 1000		1,090,652,232
-
-											i:	1001 0010 0001 0000 0100 0000 1000 0010		2,450,538,626
-											return:	Error (given that i is too large, likely due to representation of 2-complement)
-
-		static 	int		reverseBytes(int i)			Return the int value with all of the bytes in i reversed using 2-complement:
-
-												1-------- 2-------- 3-------- 4--------
-											i:	0000 0000 0000 0000 0000 0000 1000 0010		130
-												4-------- 3-------- 2-------- 1--------
-											return:	1000 0010 0000 0000 0000 0000 0000 0000		-2,113,929,216
-
-											i:	0000 0000 0000 0000 0000 0000 0010 0010		34
-											return:	0010 0010 0000 0000 0000 0000 0000 0000		570,425,344
-
-		static 	int		rotateLeft(int i, int distance)		Rotate the bits in int i by distance number of bits using 2-complement:
-					rotateRight(int i, int distance)
-											i:	0001 0010 0001 0000 0100 0000 1000 0010		303,054,978		[Rotate Left] Distance = 5
-											return:	0100 0010 0000 1000 0001 0000 0100 0010		1,107,824,706
-
-											Bits which leave one side re-enter on other side.
-											Negative distance is equivalent to rotation in opposite direction.
-											Distance of 32 naturally results in no change.
-
-		Comparison
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		static	int		compare(int x, int y)			Compare where: 		0: Equal 		<0: x < y		>0: x > y		(Signed - 2-Complement)
-			int		compareTo(int i)			Compare where:		0: Equal		<0: this < i		>0: this > i
-		static	int		compareUnsigned(int x, int y)		Compare where: 		0: Equal 		<0: x < y		>0: x > y		(Unsigned)
-
-			boolean		equals(Object obj)			True if obj is an Integer, not null and value is same as this		
-
-		static	int		min(int a, int b)			Return the smallest of a or b
-		static	int		max(int a, int b)			Return the largest of a or b
-
-
-		System Property
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		static	Integer		getInteger(String s)			Get System Property s (as defined/obtained via System.getProperty(String s)), val is the default value returned if property do not exist, use null if not needed to prevent unnecessary allocation of Integer
-		static	Integer		getInteger(String s, int val)
-		static	Integer		getInteger(String s, Integer val)
-
-
-		Division
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		static	int		divideUnsigned(int x, int y)		Divide x/y as both unsigned
-
-		static	int		remainderUnsigned(int x, int y)		Return the unsigned remainder of x/y (compared to % which I presume is signed)
-
-
-		Sign
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		static 	int		signum(int i)				Return the sign of i:
-
-											i: -12:		return: -1
-											i: 0:		return: 0
-											i: 12:		return: 1
-
-		HashCode
-		-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-			int		hashCode()				Return hashCode for this
-		static	int		hashCode(int i)				Return hashCode for i
 
 
 					
