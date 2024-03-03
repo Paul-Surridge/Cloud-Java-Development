@@ -41,8 +41,6 @@ Recursion:
 
 			- Dynamic Programming is not solely applicable to arrays or strings but is a technique that can be applied to any problem that can be broken down into a smaller subset of problems.
 
-		
-
 		Call Tree:
 
 			- Call tree is not an existing graph/structure in memory.

@@ -17,23 +17,27 @@ Utility Functions - Data Conversions (Built-in)
 			 	      		       String charsetName)				byte[] 		-> String 		From offset for length bytes using the supplied Charset
 
 				Constructor	String(byte[] bytes, String charsetName)		byte[] 		-> String 		Using the supplied Charset
-				Constructor	String(char[] value)					char[] 		-> String
-				Constructor	String(char[] value, int offset, int count)		char[] 		-> String 		Using offset and count
 				Constructor	String(int[] codePoints, int offset, int count)		int[] 		-> String 		Using offset and count, the int values are interpreted using unicode and narrrowed/converted to chars (16 bit)
 				Constructor	String(String original)					String 		-> String
 				Constructor	String(StringBuffer buffer)				StringBuffer 	-> String
 				Constructor	String(StringBuilder builder)				StringBuilder 	-> String
 
+
+				Constructor	String(char[] value)					char[] 		-> String
+				Constructor	String(char[] value, int offset, int count)		char[] 		-> String 		Using offset and count
+				
 			static	String		copyValueOf(char[] a)					char[] 		-> String 		Calls valueOf(char[] a).
 			static	String		copyValueOf(char[] a,
 							    int iOffset,int iCount)	
-
-			static	String		valueOf(boolean b)					boolean 	-> String 		"true" or "false"
-			static	String		valueOf(char c)						char 		-> String
 			static	String		valueOf(char[] ca)					char[] 		-> String
 			static	String		valueOf(char[] ca,					char[] 		-> String 		With offset and length, iOffset + iCount must not go out of bounds i.e. this would need to be worked out prior to invocation
 							int iOffset,
 							int iCount)
+
+
+			static	String		valueOf(boolean b)					boolean 	-> String 		"true" or "false"
+			static	String		valueOf(char c)						char 		-> String
+
 			static	String		valueOf(double d)					double 		-> String		Equivalent to: Double.toString()
 			static	String		valueOf(float f)					float 		-> String		Equivalent to: Float.toString()
 			static	String		valueOf(int i)						int 		-> String		Equivalent to: Integer.toString()

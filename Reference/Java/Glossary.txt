@@ -183,7 +183,7 @@ Glossary:
 
 							[Worst]		1. Coincidental:		Components are arbitrary.
 									2. Logical:			Components broadly belong to the same catagory but different in nature e.g. mouse/keyboard form input devices.
-									3. Temporal:			Components are process at the same time e.g. function is called after catching an exception.
+									3. Temporal:			Components are processed at the same time e.g. function is called after catching an exception.
 									4. Procedural/Sequential:	Components always occur sequentially e.g. function checks the file permissions before opening a file.
 									5. Data/Information:		Components operate on the same data.
 									6. Functional:			Components contribute to a single well-defined task.

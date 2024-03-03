@@ -1,0 +1,82 @@
+Dynamic Programming - Tabulation
+
+	Overview:
+
+		- Tabulation involves tabulating all of the intermediary results before arriving at the ultimate answer.
+		- Tabulation is the most efficent means of computation opposed to recursion and memoisation.
+
+	Components:
+
+		- Question:		The question being asked or solution that needs to be found.
+		- Target:		The original input value of the question.
+		- Base Case:		The axiomatic base case which is the smallest input value for the question. It forms the starting point for the iterative population of the table towards reaching the answer to the target input value.
+		- Table:		The table which holds all of the intermediary calculated values towards calculating the solution of target input value:
+			
+						Dimensions:	Number of inputs of target.
+						Size/Range:	(0 - Target value dimension(s)).
+						Data Type:	Each element contains the data type expected to be returned by the question if the process was 'started' from that element, each element is initialised to the default value of that type.
+
+		- Iterative Logic:	The 'difficult bit' is working out the iterative logic in order to build up to the calculation of the target input value.
+
+	Process:
+
+		1. Table:		Build table.
+		2. Base Case:		Define base cases.
+		3. Iterative Logic:	Define iterative logic (typically by working with a relatively small target value to identify the necessary logic).
+		4. Iteration:		Run the iteration up to the target input value.
+
+	Example:
+
+		1. Table:	Interpret the problem as a table, for exmaple:
+
+					Fibonnaci:		Naturally would be a table of: 		1 Row 	n Col
+					Grid Traveller:		Naturally would be a table of: 		m Row 	n Co
+
+		2. Table Size:	The dimensions and size corresponds as follows:
+
+					Table Dimensions:	Number of inputs as defined within the problem.
+					Table Size/Range:	0 - Desired Target Value	 (it is necessary to calculate the intermediary values from 0 up to the desired target value)
+
+				Depiction:
+
+					canSum(7, [5, 3, 4]):
+
+						  0   1	  2   3	  4   5	  6   7
+						|   |	|   |	|   |	|   |	|
+
+						Table Dimensions:	Number of inputs:			1
+						Table Size/Range:	(0 - Desired Target Value):		7
+
+					gridTraveller(3, 6)
+						 _ _ _ _ _ _
+ 						|_|_|_|_|_|_|
+ 						|_|_|_|_|_|_|
+ 						|_|_|_|_|_|_|
+
+						Table Dimensions:	Number of inputs:			2
+						Table Size/Range:	(0 - Desired Target Value):		3 and 6
+ 
+				NB: When declaring the table, given arrays are 0-based, it may be more worthwhile to declare [Size+1] so that can ignore the 0th element and use the 1-Size elements.
+
+		3. Data Type:	Table elements should be of the same data type as the required answer to question.
+
+		4. Initialise:	Initialise the table to any default values if necessary e.g. to all 0's or false.		
+
+		5. Base Cases:	Define the base case, seed, smallest cases or smallest input values of the problem and the corresponding axiomatic answers, which may involve:
+
+					1. Smallest Case:	Start with the smallest case e.g. element 0, element 1 or 1,1.
+					2. Axiomatic Value:	Manually workout the answer for this case, typically this maybe an axiomatic value.
+					3. Starting Point:	Use base cases as a starting point for building up the values in the remaining elements.
+					4. Iterate:		Shift through all elements until reach the desired input target value.
+
+		6. Iterative Logic:
+
+				- Deriving the iterative logic is the most 'difficult aspect' of the overall implementation of tabulation.
+				- This needs to derived on an adhoc basis, there is no predefined approach to deriving the logic given the question.
+				- The best approach combines a number of aspects:
+
+					1. Consider the nature of the problem.
+					2. How is the target result derived, maybe work 'backwards'.
+					3. Produce a small table/range and manually attempt to workout the logic.
+					4. Build up say the first 0-10 elements to have confidence that the logic has been found.
+					5. Apply the solution to all of the elements in the initial 0-10 test table to attempt to find the iterative process.

@@ -1,0 +1,73 @@
+Permutations and Combinations:
+
+	In general:
+
+		Permutation:	Order matters		The order does matter in that characters which are arrange in a different order are different permutations.
+		Combination:	Order not matter	The order does not matter in that the same set of characters can be arranged in different order and still be the same combination	
+
+		Permutation:	Is the specific arangement of a characters
+		Combination:	Is the specific 'make-up' of characters	
+
+	Given ABC and CAB:
+
+		Permutation:	2		There are x2 permutations of the same x3 letters
+		Combination:	1		There is only x1 combination as ABC and CAB are ultimately the same x3 letters combined in a group
+
+		ABC and CAB are the same combination but different permutations.
+
+	Given a set [A B C D]:
+
+		If considering only x2 letters out of the x4 at anyone time:
+
+			AB	BA	CA	DA
+			AC	BC	CB	DB
+			AD	BD	CD	DC
+
+		Here:
+
+			Permutations:	12
+			Combinations:	6	Given AB and BA are the same combination (but not the same permutation).
+
+	Given a set [A B C]:
+
+		Permutations are:
+
+			[A B C]	[B A C] [C B A]
+			[A C B]	[B C A] [C A B]
+
+		Therefore a set of N size will have N! permutations (but only one combination).
+
+	Total:
+
+		Given:	n: Set Size
+			R: Consideration Size
+
+		Number of Permutations:
+
+			Notation: nPR
+
+				  n!
+				------
+				(n-R)!
+
+			Therefore the above produces:
+
+				  4!	= 12
+				------
+				(4-2)!	
+
+			If wish to find the number of permutations of whole set then set R = n therefore (n-R)! -> 0! = 1 i.e. n! overall.
+
+		Number of Combinations:
+
+			Notation: nCR
+
+				    n!
+				---------
+				(n-R)! R!
+
+			Therefore the above produces:
+
+				   4!	  = 6
+				---------
+				(4-2)! 2!	
