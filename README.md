@@ -89,12 +89,16 @@ Please find a repository containing the following folder/files:
 	36.	Nested Types - Nested Class
 	37.	Operators
 	38.	Packages
-	39.	Recursion
-	40.	Shadowing
-	41.	Statements Expressions Loops
-	42.	Static
-	43.	Streams and Pipelines
-	44.	Variables
+	39.	Shadowing
+	40.	Statements Expressions Loops
+	41.	Static
+	42.	Streams and Pipelines
+	43.	Utility Functions - Bitwise
+	44.	Utility Functions - Comparison
+	45.	Utility Functions - Conversions
+	46.	Utility Functions - Integer
+	47.	Utility Functions - String
+	48.	Variables
 
 	/Reference Projects
 
