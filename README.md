@@ -4,9 +4,9 @@ Please find a repository containing the following folder/files:
 
 	1. Projects			x3 java projects for review
 	2. Screenshots			Screenshots of the x3 java projects and those from previous employer
-	3. Reference			Sample reference material of java and cloud technologies
-	4. Software Competencies.pdf	Summary of competencies and research of java and cloud technologies
-	5. Software Principles.pdf	Summary of personal principles applied to all software
+	3. Reference			Reference/research material of java, kotlin and cloud technologies
+	4. Software Competencies.pdf	Competencies/research of java, kotlin and cloud technologies
+	5. Software Principles.pdf	Personal principles applied to all software
 
 **/Projects:**
 
