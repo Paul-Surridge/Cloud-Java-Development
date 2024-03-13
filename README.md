@@ -48,19 +48,6 @@ Please find a repository containing the following folder/files:
 	11. 	TDD	
 	12.	XML/HTTP/REST
 
-	/Reference Projects
-
-	1.	Spring - Logging
-	2.	Spring - Multiple Module - 1 - XML Configuration
-	3.	Spring - Multiple Module - 2 - Annotation Configuration
-	4.	Spring - Multiple Module - 3 - console
-	5.	Spring - Multiple Module - 4 - Application Events
-	6.	Spring - Multiple Module - 5 - minNumber
-	7.	Spring - Multiple Module - 6 - Components
-	8.	Spring - Multiple Module - 7 - Lombok
-	9.	Spring Boot - Example
-	10.	Spring MVC - Todo List	
-
 	/Java
 	__________________________________________________________________________________________________________
 
