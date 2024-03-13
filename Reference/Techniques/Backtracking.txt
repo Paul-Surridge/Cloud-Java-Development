@@ -306,11 +306,15 @@ Backtracking:
 
 	    	    	    			for(i -> mutator.n)
 	    	    	    			{
+							//Apply the modification
 							alPath.add(i)
 							rm(modifiedInput[i])
 							alPath.remove(i)
+							//Unapply the modification
 	    	    	    			}
 					}
+
+			[OR]
 
 			Pre-Emptive Validation:
 
@@ -318,18 +322,44 @@ Backtracking:
 
 					rm(input)
 					{
-	    	    	    			if(input == base case)					//Base case
+	    	    	    			if(input == base case)
 							process
 							return
 
 	    	    	    			for(i -> mutator.n)
 	    	    	    			{
-							if(modifiedInput[i]/environment[i] == valid)	//Check ahead for valid case
+							if(modifiedInput[i]/environment[i] == valid)	//PreCheck - The invalidity check is done before hand i.e. before moving into the next recursive call
 							{
+								//Apply modification
 								alPath.add(i)
 								rm(modifiedInput[i]/environment[i])
 								alPath.remove(i)
+								//Unapply the modification
 							}
+	    	    	    			}
+					}
+
+			[Or]
+
+			Post-Emptive Validation:
+
+				Source Code:
+
+					rm(input)
+					{
+	    	    	    			if(input == base case)
+							process
+							return
+
+						if(input == invalid case)				//PostCheck - The invalidity check is done after moving into the next recursive call whereby it immediately returns
+
+	    	    	    			for(i -> mutator.n)
+	    	    	    			{
+							//Apply modification
+							alPath.add(i)
+							rm(modifiedInput[i]/environment[i])
+							alPath.remove(i)
+							//Unapply the modification
 	    	    	    			}
 					}
 
@@ -365,4 +395,16 @@ Backtracking:
 
 				- Path will consist of the individual combinations of mutator elements which will combine and reach the base cases.
 				- Path is built up and stored within the List<Mutator_Element> ArrayList<>();
+
+		- Backtracking general approach:
+
+			1. Call Tree:		Draw it out
+			2. Environment:		Identify the broad general environment in which constitutes the environment/context of the question being asked and what will form the answer(s) i.e. Base Cases.
+			3. Base Case:		Identify the specific situation/states/conditions which will constitute a success i.e. the answer to the question.
+			4. Invalid Case:	Identify the specific situation/states/conditions which will constitute an immediate fail/impossible state.
+			5. Ongoing Case:	Identify the specific situation/states/conditions which will constitute a valid state but not a success.
+			6. Insights:		Identify any careful/delicate insights which may help to discern the x3 cases.
+			7. Standard Form:	Plumb all of the above into the standard form(s) above in order to find all base cases.
+
+			 
 					

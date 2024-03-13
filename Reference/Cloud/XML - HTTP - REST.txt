@@ -945,7 +945,7 @@ REST API
 					- Highly-cohesive	Loosely Coupled Services
 
 		- REST:		Is not a standard, but a set of constraints.
-		- REST:		Originally described in ___ dissertation.
+		- REST:		Originally described in post doctorate dissertation.
 		- REST:		Closely associated with HTTP but not tied to it, the dissertation does not explicitly reference or restrict to HTTP.
 
 	- Uniform Interface:

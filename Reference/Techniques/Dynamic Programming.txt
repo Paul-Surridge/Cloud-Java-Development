@@ -20,6 +20,8 @@ Dynamic Programming
 
 				NB: Greedy and Divide and Conquer consist of subproblems but they do not overlap, therefore are not dynamic programming.
 
+			4. Any problem where the state transitions of the context/environment form a acyclic graph.
+
 		Dynamic Programming is a subset of 'Divide and Conquer' technique which involves breaking down an initial problem into a smaller subsets of the same problem but with smaller input values.
 		Dynamic Programming is considered more 'difficult' than Greedy or Divide and Conquer, therefore should only be considered once these two options have been discounted.
 		Dyanmic Programming is typically applied to the following question types:
@@ -36,7 +38,7 @@ Dynamic Programming
 
 						dp(i) = dp(i-1) + dp(i-2)
 
-					Base case is typically predefined with a value e.g. dp[1] = 1, dp[2] = 3									
+					Base case is typically predefined with a value e.g. dp[1] = 1, dp[2] = 3
 
 	Top-Down/Bottom-Up:
 
@@ -48,6 +50,10 @@ Dynamic Programming
 				- Easier to derive/write
 				- No ordering required
 				- Implemented via:	Recursion + HashMap
+				- Can be thought of as 'optimised backtracking' i.e.
+
+					- The problem can be solved using a backtracking algorithm inconjunction with memoisation/caching to improve time complexity.
+					- Where the results from the subproblems will always be consistent and optimal given a particular input.
 
 				Execution:
 
@@ -418,13 +424,13 @@ Dynamic Programming
 
 	Standard Approach 1: Framework
 
-		1. Assess and identify:
+		1. Assess:
 
-			Ultimately it is necessary to assess, identify and pull out the following aspects/components, typically done by drawing out the problem:
+			Assess, identify and pull out the following aspects:
 
-				1. Context:
+				1. Context/Environment:
 
-					- What is the overall context (or environment) of the question being asked?
+					- What is the overall context (or environment) of the question being asked, what are you being asked to deal with?
 					- What does the overall context consist of?
 
 				2. State Variables:
@@ -434,24 +440,52 @@ Dynamic Programming
 					- What are the 'things' or aspects which would constitute or represent an alternate overall state of the context?
 					- How many state variables are there therefore how many dimension are there?
 
-				3. State Transitions:
+				3. Subproblems:
+
+					- What are the sub-problems?
+					- What are the optimum results of the sub-problems?
+					- How to these results combine to produce the optimum result of the next (slightly larger input)?
+					- How to these results combine to produce the optimum result for the initial input?
+					- Do the sub-problems i.e. the same question being asked of smaller inputs always yield the same/fixed optimal result. 
+
+				4. Insights:
+
+					- Assess the problem and ask 'what can we say about this problem/question/situation'
+					- Try to derive insights into how this situation evolves which may help in the derivation of the Recurrence Relation.
+
+		2. Call Tree:
+
+			Build the Call Tree with the final input naturally as the root in order to identify the following:
+
+					Base Cases:		Help identify base cases
+					Initial Input:		Help identify the Initial Input
+					State Transitions:	Help identify how the context may transition between states
+					Final Result:		Help identify how the Final Result is constructued from the optimal result of the subproblems of smaller inputs
+					Sub-problems:		Help identify how the sub-problems exist and overlap
+					Decisions:		Help identify the decisions that are available between states, the decisions which ultimately determine what states there are.
+
+				1. Initial Input:
+
+					- What is the initial input that would be the root of the Call Tree.
+					- What is the input whose answer you are ultimately trying to find from the built up optimum results of the same problem but using smaller inputs.
+
+				2. Final Result:
+
+					- What is the nature/type of the final result that the question is asking. 
+
+				3. Subproblem:
+
+					- What is the nature of the subproblem that can be applied to smaller inputs in order to build up and construct the answer to the initial input.
+
+				4. State Transitions:
 
 					- What are the decisions or pathways that are available from one state to the next?
 					- How are the input variables changed between states.
 
-				4. Call Tree:
-
-					- Call tree should be drawn out to identify how the Final Result of the Initial Input will ultimately be constructed and found.
-
-						Base Cases:		Help identify base cases
-						Initial Input:		Help identify the Initial Input
-						State Transitions:	Help identify how the context may transition between states
-						Final Result:		Help identify how the Final Result is constructued from the optimal result of the subproblems of smaller inputs
-						Sub-problems:		Help identify how the sub-problems exist and overlap
-						Decisions:		Help identify the decisions that are available between states, the decisions which ultimately determine what states there are.
-
 				5. Decisions:
 
+					- What are the decisions that can be applied to the state variables that determine the structure of the call tree.
+					- What are the decisions that describe how the environment state shifts, changes and mutates between nodes of the call tree.
 					- What are the standard and consistent set of decisions that can be applied at each stage/state to enable to derivation of other states?
 
 				6. Base Cases:
@@ -462,69 +496,120 @@ Dynamic Programming
 					- Are there one or more?
 					- Are there any invalid cases which need to be ignored?
 
-				7. Subproblems:
+		3. Recurrence Relation:
 
-					- What are the sub-problems?
-					- What are the optimum results of the sub-problems?
-					- How to these results combine to produce the optimum result of the next (slightly larger input)?
-					- How to these results combine to produce the optimum result for the initial input?
-					- Do the sub-problems i.e. the same question being asked of smaller inputs always yield the same/fixed optimal result. 
+			Use all of the above aspects to derive the Recurrence Relation between states of environment:
 
-				8. Insights:
+				- What are the options/decisions that are there available to mutate the inputs at each state?
+				- What is the relation between individual states?
+				- How do the inputs change overtime?
+				- How do the inputs and their own results combine to find the result of the next larger input?
+				- How do the results in the call tree get combined to find the result for the parent node?
+				- How do you build the result of state i from the result of previous smaller inputs
 
-					- Assess the problem and ask 'what can we say about this problem/question/situation'
-					- Try to derive insights into how this situation evolves which may help in the derivation of the Recurrence Relation.
+					NB: It is only possible to build/find/calculate the result of a current state from the result of previous smaller states.
 
-				9. Recurrence Relation:
+				- Ensure that the recurrence relation wholley conforms with the question being asked and the options/behaviour available at each state.
 
-					- Ultimately all of the above is to derive the Recurrence Relation.
-					- What are the options/decisions that are there available to mutate the inputs at each state?
-					- What is the relation between individual states?
-					- How do the inputs change overtime?
-					- How do the inputs and their own results combine to find the result of the next larger input?
-					- How do the results in the call tree get combined to find the result for the parent node?
-					- How do you build the result of state i from the result of previous smaller inputs
+			[Return Type] Result = dp[Smaller Values] ...
 
-						NB: It is only possible to build/find/calculate the result of a current state from the result of previous smaller states.
+				Left Hand Side:
 
-					- Ensure that the recurrence relation wholley conforms with the question being asked and the options/behaviour available at each state.
+					Return Type:
 
-				10. Array/Grid:
+						- The Return Type is:
 
-					- If necessary draw out an array or grid to help discern and test your hypothesis on how the final result for the initial input is derived via the Recurrence Relation.
-					- If necessary:
+							1. Ultimate Question:		The Type of the ultimate question being asked.
+							2. Subproblems:			The Type of all of the subproblems being asked.
+							3. Map Values:			The Type of the Value Column in Memo Map.
+							4. Child Nodes:			The Type of the node values as illustrated in the derived Call Tree.
 
-						1. Choose a relatively small (medium size case) but not base case example which can all be solved axiomatically e.g.
+				Right Hand Side:
 
-							Longest Common Subsequence:
+					The structure of the right hand side of the Recurrence Relation is derived from the Call Tree:
 
-									a	c	e
-								   ----------------------
-								a |	3	2	1
-								b |	2	2	1
-								c |	2	2	1
-								d |	1	1	1
-								e |	1	1	1
+						- Use the visible relationship between the parent node and all of the child nodes as derived from within the Call Tree in accordance and while taking consideration of the question being asked.
+						- Therefore
 
-						2. Apply the question to each of the inputs sizes to have the relationship between states emerge:
+							1. Draw out the initial call tree from the root manually on paper and the expected child nodes.
+							2. Determine how the result of the child nodes corresponds/produces the result of the parent/root node.
 
-							- If the first letter match then:	Result = Diagonally down right + 1
-							- If the first letter not match then:	Result = Max(Result(Below) , Result(Right))
+					For Example:
 
-						3. Thereby creating the Recurrence Relation:
+						'Find the minimum number of coins to make up a target value, e.g. Coins [1, 2, 5], Target 11'
 
-							if(s1[0] == s2[0])	Result[iRow, iCol] = Result[iRow + 1, iCol + 1] + 1
-							else			Result[iRow, iCol] = Math.max(dp(iRow + 1, iCol), dp(iRow, iCol + 1))
+							This can be solved using dynamic programming given that:
 
-					- This method/exercise of creating and manually populating/calculating the result array/grid of a managable range of input(s) is incredibly powerful in finding:
+								'The optimum result of the subproblems/subvalues of Target can be used to build up and find the optimum result of the ultimate Target value (11)'
 
-						- Insights
-						- Behaviour between states
-						- State Transition:
-							How the results of the incrementally larger (overlapping) states are derived.
-						- Ultimately the Recurrence Relation
+							1. Return Type:
 
-					- Dare I say this is the only way to derive the Recurrence Relation.
+								- The Return Type is an Int because the ultimate question is after an Int value.
+								- Therefore the Memo Value column is an Int.
+
+							2. Base Cases:
+
+								- What are the base cases/axiomatic examples, this must be derived from good ol' fashion human reasoning of the question:
+
+									Memo[1, 1]	//If Target = 1, then can only be made up of x1 coin
+									Memo[2, 1]	//If Target = 2, then can only be made up of x1 coin
+									Memo[5, 1]	//If Target = 5, then can only be made up of x1 coin
+
+							3. Call Tree:
+
+								The 'top' can be manually derived:
+
+											11
+										--------|--------
+										|	|	|
+										10	9	6
+
+								Here:
+
+									- The target is subtracted by the individual coin values [1, 2, 5] to produce the child nodes.
+									- The result for the root/parent is the smallest result from/of the child nodes.
+									- Therefore the Recurrence Realtion is:
+
+										iResult = Min(dp(Target-Coins[0]), dp(Target-Coins[1]), dp(Target-Coins[2]) ... )
+
+									- Therefore ultimately the section of code in the standard form for a Dynamic Programming question must perform the above (hopefully in the most concise way possible).
+
+		3. 2D Multi-Dimensional: [If Necessary]
+
+			- If necessary draw out an array or grid to help discern and test your hypothesis on how the final result for the initial input is derived via the Recurrence Relation.
+			- If necessary:
+
+				1. Choose a relatively small (medium size case) but not base case example which can all be solved axiomatically e.g.
+
+					Longest Common Subsequence:
+
+							a	c	e
+						   ----------------------
+						a |	3	2	1
+						b |	2	2	1
+						c |	2	2	1
+						d |	1	1	1
+						e |	1	1	1
+
+				2. Apply the question to each of the inputs sizes to have the relationship between states emerge:
+
+					- If the first letter match then:	Result = Diagonally down right + 1
+					- If the first letter not match then:	Result = Max(Result(Below) , Result(Right))
+
+				3. Thereby creating the Recurrence Relation:
+
+					if(s1[0] == s2[0])	Result[iRow, iCol] = Result[iRow + 1, iCol + 1] + 1
+					else			Result[iRow, iCol] = Math.max(dp(iRow + 1, iCol), dp(iRow, iCol + 1))
+
+			- This method/exercise of creating and manually populating/calculating the result array/grid of a managable range of input(s) is incredibly powerful in finding:
+
+				- Insights
+				- Behaviour between states
+				- State Transition:
+					How the results of the incrementally larger (overlapping) states are derived.
+				- Ultimately the Recurrence Relation
+
+			- Dare I say this is the only way to derive the Recurrence Relation.
 
 		4. Once all of the above has been discerned apply to standard forms below:
 
@@ -586,72 +671,7 @@ Dynamic Programming
 
 					1. The behaviour is ultimately the same as Top-Down except that the Result of each input is stored in the array directly (rather than the memo)
 					2. The results are gradually built up until reach the last element in the 'results' array which represents the initial input.
-
-		5. How to find the Recurrence Relation:
-
-			[Return Type] Result = dp[Smaller Values] ...
-
-			Left Hand Side:
-
-				Return Type:
-
-					- The Return Type is:
-
-						1. Ultimate Question:		The Type of the ultimate question being asked.
-						2. Subproblems:			The Type of all of the subproblems being asked.
-						3. Map Values:			The Type of the Value Column in Memo Map.
-						4. Child Nodes:			The Type of the node values as illustrated in the derived Call Tree.
-
-			Right Hand Side:
-
-				The structure of the right hand side of the Recurrence Relation is derived from the Call Tree:
-
-					- Use the visible relationship between the parent node and all of the child nodes as derived from within the Call Tree in accordance and while taking consideration of the question being asked.
-					- Therefore
-
-						1. Draw out the initial call tree from the root manually on paper and the expected child nodes.
-						2. Determine how the result of the child nodes corresponds/produces the result of the parent/root node.
-
-				For Example:
-
-					'Find the minimum number of coins to make up a target value, e.g. Coins [1, 2, 5], Target 11'
-
-						This can be solved using dynamic programming given that:
-
-							'The optimum result of the subproblems/subvalues of Target can be used to build up and find the optimum result of the ultimate Target value (11)'
-
-						1. Return Type:
-
-							- The Return Type is an Int because the ultimate question is after an Int value.
-							- Therefore the Memo Value column is an Int.
-
-						2. Base Cases:
-
-							- What are the base cases/axiomatic examples, this must be derived from good ol' fashion human reasoning of the question:
-
-								Memo[1, 1]	//If Target = 1, then can only be made up of x1 coin
-								Memo[2, 1]	//If Target = 2, then can only be made up of x1 coin
-								Memo[5, 1]	//If Target = 5, then can only be made up of x1 coin
-
-						3. Call Tree:
-
-							The 'top' can be manually derived:
-
-										11
-									--------|--------
-									|	|	|
-									10	9	6
-
-							Here:
-
-								- The target is subtracted by the individual coin values [1, 2, 5] to produce the child nodes.
-								- The result for the root/parent is the smallest result from/of the child nodes.
-								- Therefore the Recurrence Realtion is:
-
-									iResult = Min(dp(Target-Coins[0]), dp(Target-Coins[1]), dp(Target-Coins[2]) ... )
-
-								- Therefore ultimately the section of code in the standard form for a Dynamic Programming question must perform the above (hopefully in the most concise way possible).
-
+	
 	Standard Approach 3:
 
 		1. Criteria:	Does the question appear to be solvable via DP, does it generally have the following characteristics:

@@ -1577,3 +1577,38 @@ Spring Boot:
 				spring.output.ansi.enabled = always
 
 			- This will cause the console output to be colour coded and easier to read.
+
+	Collate:
+
+		List of all Annotations
+		List of all Classes
+		List of all Interfaces
+		List of all Mavern Dependencies
+
+	How To's:
+
+		Sample code of all annontations in use
+		Sample code of all common pieces of functionality
+		Sample code of whole projects structure
+
+	In General:
+
+		1. Dependencies:	Define your dependencies, what Spring projects (and all of their accompanying libraries) to use i.e. what your project needs:
+
+			1. Spring Core
+			2. Spring MVC
+			3. Spring Data
+			4. Spring Integration
+			5. ...
+
+		2. Build Out:		Using the skeletal application context, build out your program using the known techniques
+
+			1. Configuration:	Define all of your 'configuration' via the various means, define all of the Beans and how hey will interact...
+			2. Input/Output:	Define all of the input/output that the application will constitute.
+			3. Implement:		Implement all of the necessary functionality and make the beans dance.
+
+		3. Run/Deploy:		Run the application within the IDE or deploy to cluster ...
+
+
+
+
