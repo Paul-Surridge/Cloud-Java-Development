@@ -33,7 +33,7 @@ Please find a repository containing the following folder/files:
 	concepts, syntax and constructs.
 
 	/Cloud
-	_____________________________________________________________________________________________________
+	____________________________________________________________________________________________________
 
 	1.	Cloud Native Application Development
 	2. 	Continuous Integration
@@ -49,7 +49,7 @@ Please find a repository containing the following folder/files:
 	12.	XML/HTTP/REST
 
 	/Java
-	_____________________________________________________________________________________________________
+	____________________________________________________________________________________________________
 
 	1. 	Abstract Class - Memory Composition with Nesting
 	2.	Access Modifers
@@ -160,7 +160,7 @@ Please find a repository containing the following folder/files:
 	55.	Wait and Notify
 
 	/Kotlin
-	_____________________________________________________________________________________________________
+	____________________________________________________________________________________________________
 
 	1. 	Annotations
 	2.	Class
@@ -175,7 +175,7 @@ Please find a repository containing the following folder/files:
 	11. 	Types
 
 	/Techniques
-	_____________________________________________________________________________________________________
+	____________________________________________________________________________________________________
 
 	1. 	Backtracking
 	2.	BFS/DFS
