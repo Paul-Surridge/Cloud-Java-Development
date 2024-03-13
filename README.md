@@ -4,7 +4,7 @@ Please find a repository containing the following folders:
 
 	1. Projects			x3 java projects for review
 	2. Screenshots			Screenshots of the x3 java projects and those from previous employer
-	3. Reference			Sample reference and research material of java and cloud technologies
+	3. Reference			Sample reference material of java and cloud technologies
 	4. Software Competencies.pdf	Summary of competencies and research of java and cloud technologies
 	5. Software Principles.pdf	Summary of personal principles applied to all software
 
@@ -20,7 +20,7 @@ Please find a repository containing the following folders:
 	data for demonstration purposes.
 
 	In order to run the projects please download and run within an IDE as described in the enclosed file
-	'Netbeans IDE Required.txt'. Screenshots of the above x3 projects are contained in the Screenshots folder.
+	'Netbeans IDE Required.txt'. Screenshots are contained in the Screenshots folder.
 
 **Screenshots:**
 
