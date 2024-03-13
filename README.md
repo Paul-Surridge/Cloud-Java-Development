@@ -1,6 +1,6 @@
 <h1>Cloud Java Development</h1>
 
-Please find a repository containing the following folders:
+Please find a repository containing the following folder/files:
 
 	1. Projects			x3 java projects for review
 	2. Screenshots			Screenshots of the x3 java projects and those from previous employer
@@ -8,7 +8,7 @@ Please find a repository containing the following folders:
 	4. Software Competencies.pdf	Summary of competencies and research of java and cloud technologies
 	5. Software Principles.pdf	Summary of personal principles applied to all software
 
-**Projects:**
+**/Projects:**
 
 	Folder contains x3 java projects:
 
@@ -22,12 +22,12 @@ Please find a repository containing the following folders:
 	In order to run the projects please download and run within an IDE as described in the enclosed file
 	'Netbeans IDE Required.txt'. Screenshots are contained in the Screenshots folder.
 
-**Screenshots:**
+**/Screenshots:**
 
 	Folder contains screenshots of the x3 java projects contained in the Projects folder and works
 	completed at previous employer.
 
-**Reference**
+**/Reference**
 
 	Folder contains a sample of some of my research and reference material condensed into concise form
 	for quick reference of key concepts, syntax and constructs.
@@ -48,7 +48,7 @@ Please find a repository containing the following folders:
 	11. 	TDD	
 	12.	XML/HTTP/REST
 
-	Reference Sample Projects
+	/Reference Projects
 
 	1.	Spring - Logging
 	2.	Spring - Multiple Module - 1 - XML Configuration
@@ -109,7 +109,7 @@ Please find a repository containing the following folders:
 	43.	Streams and Pipelines
 	44.	Variables
 
-	Reference Sample Projects
+	/Reference Projects
 
 	Language
 
