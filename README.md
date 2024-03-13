@@ -29,8 +29,8 @@ Please find a repository containing the following folder/files:
 
 **/Reference**
 
-	Folder contains a sample of some of my research and reference material condensed into concise form
-	for quick reference of key concepts, syntax and constructs.
+	Folder contains a sample of some of my research material condensed into concise form for quick
+	reference of key concepts, syntax and constructs.
 
 	/Cloud
 	__________________________________________________________________________________________________________
