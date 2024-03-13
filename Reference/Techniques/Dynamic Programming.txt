@@ -40,6 +40,11 @@ Dynamic Programming
 
 					Base case is typically predefined with a value e.g. dp[1] = 1, dp[2] = 3
 
+		Dynamic programming has x2 approaches:
+
+			1. Top-Down:		Recursive: Utilising memoisation.
+			2. Bottom-Up:		Iteratively: Utilising tabulation.
+
 	Top-Down/Bottom-Up:
 
 		DP can be completed using one of two forms:
@@ -260,7 +265,8 @@ Dynamic Programming
  
 	Base Cases:
 
-		Base case is the most trival/smallest input.
+		Base case is typically the most 'trival', 'smallest', 'largest' possible input or an input which satifies a particular criterion, whose result is self-evident or axiomatic.
+		Base case result is used to ultimately build up the results to the input value of the question being asked.
 		Base case is a state whose value/result can normally be solved 'by hand', is self-evident or axiomatic.
 		Base case is used to stop the recursion.
 		Base case is normally the easiest part of DP.
@@ -275,6 +281,16 @@ Dynamic Programming
 					dp(1) = max(House 1 or House 2)
 
 		Base case can be derived by assessing the number of decisons I have per state e.g. if at each state I am able to move forward 1 or 2 steps then there are x2 base cases (for these are the smallest non-trivial environments) 
+		Base case and the need to identify the base case is common to all dynamic programming problems.
+		Base case is typically dependent on the expected return type of the question:
+
+			Return Type:		Base Case
+			__________________________________
+
+			int			0
+			String			""
+			Boolean			F
+			Array			[] (Empty Array)
 
 	dp():
 
@@ -421,6 +437,158 @@ Dynamic Programming
 						Input 2:	gac
 
 				- Squares out of bounds may be convenient to use when deciphering the recurrence relation, they represent when the input is empty.
+
+	Memoisation:
+
+		- Memoisation is utilised during recursive method calls.
+		- Memoisation is where the result of repeated input calculations are stored/retrieved (rather than repeatedly calculate the same input).
+		- Memoisation typically involve the utilisation of a O(1) lookup table e.g. hashmap.
+		- Memoisation can only be applied to immutable data e.g. integers/strings not whole arrays.
+		- Memoisation can be applied when the subproblems yield a result which is and always will be consistent for that particular input (where there will be no wavering aspects which will cause that to be otherwise). 
+		- Memoisation must be deployed if the solution is deemed as being Dynamic Programming, otherwise it is just considered 'brute force' recursion/backtracking.
+
+			Call Tree:
+
+				- To gain an understanding of how memoisation can be used.
+				- Create a call tree which illustrates how many times a recursive method is called and which arguments are passed.
+				- Given the below call tree, find the fib(7):
+
+					      	      fib(7)
+					 _______________|_______________
+					|				|
+					fib(5)				fib(6)
+					|_______			|_______
+					|	|			|	|
+					fib(3)	fib(4)			fib(4)	fib(5)
+					|	|			|	|
+
+
+				- It becomes apparent that fib() gets called and passed the same argument many times.
+
+			Hash Table:
+
+				- Therefore store the values of all outputs of fib() as they are calculated.
+				- Whereby:
+
+					If fib(x) has already been calculated:		Get value from hashtable.
+					If fib(x) has not already been calculated:	Calculate value and store in hashtable.
+
+			Paradigm:
+
+				- Each node should store its own result of the overall question being asked.
+				- So that any other node of the same value does not need to be re-calculated and can be pull out of memo object.
+
+					Original Input Value
+					|_______________________________________________________________
+					|				|				|
+					Calculated Input Value 1	Calculated Input Value 2	Calculated Input Value 3
+					|				|				|
+
+				- Therefore if the question being asked:
+
+					"What is the shortest path"				Each node should store the shortest path for that particular input value.
+					"What is the number of unique combinations" 		Each node should store the number of unique combination for that particular input value.
+
+				- The result is passed back up the tree to root to form the result using the original input value.
+				- Memoisation can only begin once a node contains only base case and its calculated value forms the initial entries in the memo hashtable.
+				- Components:
+
+					Question:		The original question being asked and purpose of recursion/memoisation.
+								The return type of the question maybe a boolean, integer or any other data type, each node must return the same data type.
+
+					Original Input:		The value that is originally supplied by the external program, it is the ultimate result that is required.
+
+					Node:			The intermediate or sub-input values to the recursive method calls.
+
+					Base Case:		The node is valid and its path from top root node satifies the original question.
+								The node will always be a leaf node.
+								The total number of base cases will always = Size of any results that need to be fully calculated (all other nodes are calculated after the base cases by extract the pre-calculate values from the memo hashtable).
+								The base cases form the foundation of the memo hashtable and recalled when building the paths of the higher values when being entered into the memo hashtable.
+
+					Invalid Case:		Node is invalid and path is invalid and does not satifies the original question.
+
+					Ongoing Case:		Node is valid and path is still valid but does not satisfy the original question, more recursive branching required to reach base or invalid case.
+
+	Tabulation:
+
+		- Tabulation involves tabulating all of the intermediary results before arriving at the ultimate answer.
+		- Tabulation is the most efficent means of computation opposed to recursion and memoisation.
+
+		Components:
+
+			- Question:		The question being asked or solution that needs to be found.
+			- Target:		The original input value of the question.
+			- Base Case:		The axiomatic base case which is the smallest input value for the question. It forms the starting point for the iterative population of the table towards reaching the answer to the target input value.
+			- Table:		The table which holds all of the intermediary calculated values towards calculating the solution of target input value:
+			
+							Dimensions:	Number of inputs of target.
+							Size/Range:	(0 - Target value dimension(s)).
+							Data Type:	Each element contains the data type expected to be returned by the question if the process was 'started' from that element, each element is initialised to the default value of that type.
+
+			- Iterative Logic:	The 'difficult bit' is working out the iterative logic in order to build up to the calculation of the target input value.
+
+		Process:
+
+			1. Table:		Build table.
+			2. Base Case:		Define base cases.
+			3. Iterative Logic:	Define iterative logic (typically by working with a relatively small target value to identify the necessary logic).
+			4. Iteration:		Run the iteration up to the target input value.
+
+		Example:
+
+			1. Table:	Interpret the problem as a table, for exmaple:
+
+						Fibonnaci:		Naturally would be a table of: 		1 Row 	n Col
+						Grid Traveller:		Naturally would be a table of: 		m Row 	n Co
+
+			2. Table Size:	The dimensions and size corresponds as follows:
+
+						Table Dimensions:	Number of inputs as defined within the problem.
+						Table Size/Range:	0 - Desired Target Value	 (it is necessary to calculate the intermediary values from 0 up to the desired target value)
+
+					Depiction:
+
+						canSum(7, [5, 3, 4]):
+
+							  0   1	  2   3	  4   5	  6   7
+							|   |	|   |	|   |	|   |	|
+
+							Table Dimensions:	Number of inputs:			1
+							Table Size/Range:	(0 - Desired Target Value):		7
+
+						gridTraveller(3, 6)
+							 _ _ _ _ _ _
+ 							|_|_|_|_|_|_|
+ 							|_|_|_|_|_|_|
+ 							|_|_|_|_|_|_|
+
+							Table Dimensions:	Number of inputs:			2
+							Table Size/Range:	(0 - Desired Target Value):		3 and 6
+ 
+					NB: When declaring the table, given arrays are 0-based, it may be more worthwhile to declare [Size+1] so that can ignore the 0th element and use the 1-Size elements.
+
+			3. Data Type:	Table elements should be of the same data type as the required answer to question.
+
+			4. Initialise:	Initialise the table to any default values if necessary e.g. to all 0's or false.		
+
+			5. Base Cases:	Define the base case, seed, smallest cases or smallest input values of the problem and the corresponding axiomatic answers, which may involve:
+
+						1. Smallest Case:	Start with the smallest case e.g. element 0, element 1 or 1,1.
+						2. Axiomatic Value:	Manually workout the answer for this case, typically this maybe an axiomatic value.
+						3. Starting Point:	Use base cases as a starting point for building up the values in the remaining elements.
+						4. Iterate:		Shift through all elements until reach the desired input target value.
+
+			6. Iterative Logic:
+
+					- Deriving the iterative logic is the most 'difficult aspect' of the overall implementation of tabulation.
+					- This needs to derived on an adhoc basis, there is no predefined approach to deriving the logic given the question.
+					- The best approach combines a number of aspects:
+
+						1. Consider the nature of the problem.
+						2. How is the target result derived, maybe work 'backwards'.
+						3. Produce a small table/range and manually attempt to workout the logic.
+						4. Build up say the first 0-10 elements to have confidence that the logic has been found.
+						5. Apply the solution to all of the elements in the initial 0-10 test table to attempt to find the iterative process.
 
 	Standard Approach 1: Framework
 
@@ -672,7 +840,7 @@ Dynamic Programming
 					1. The behaviour is ultimately the same as Top-Down except that the Result of each input is stored in the array directly (rather than the memo)
 					2. The results are gradually built up until reach the last element in the 'results' array which represents the initial input.
 	
-	Standard Approach 3:
+	Additional Considerations:
 
 		1. Criteria:	Does the question appear to be solvable via DP, does it generally have the following characteristics:
 
@@ -903,474 +1071,5 @@ Dynamic Programming
 
 			    return memo value for input
 			}
-
-	
-
-	Recursion:
-
-		- Recursion can be deployed within many areas, including:
-
-			1. Dynamic Programming.
-			2. Graph Traversal.
-			3. Back Tracking
-
-		- Recursion within dynamic programming and graph traversal are fundamentally equivalent:
-
-			Dynamic Programming		Graph Traversal
-			_________________________________________________________________________________________________________________________________________________
-
-			Initial input			Starting node
-			Input				Current node
-			Base case			Target node
-			Invalid case			Unavilable node 		e.g. a blocked 'walled' node
-			Mutators			Paths to adjacent nodes 	e.g. the available means/options of traversing and arriving at the adjacent nodes
-			Mutation			Moving to an adjacent node
-			Parent rm() call		Previous node
-			Child rm() call			Adjacent/next node
-
-	Call Tree:
-
-		- Call tree is not an existing graph/structure in memory.
-		- Call tree nodes:
-
-			- Nodes are not physical constructs in memory.
-			- Nodes do not hold any value.
-			- Nodes only hold the mutated input value from previous recursive method call.
-			- Nodes are emphemeral recursive method calls which are essentially just a memory address.
-
-		- Call tree represents temporal instances of rm() on the call stack.
-		- Call tree is generated 'on the fly' and respresents the recursive method calls and the mutated input being passed down, each rm() call has x3 possible outcomes/cases:
-
-			1. Base:	Recursion ceases, the design of the rm() determines behaviour once base case found, there are x3 options:
-
-						Base Cases		Return to Root
-						________________________________________________________________________________________________________________________________________________________________
-
-						Find x1			Immediate 			Once x1 base case has been found immediately return to the root and the initial method.
-						Find n 			Non-Immediate			Traverse the partial tree, once n base cases found then return to the root and the initial method.
-						Find all		Non-Immediate			Traverse the whole tree, once all base cases found then return to the root and the initial method.
-
-					There may be multiple definitions of base case:
-
-						if(input == 1 || input%10 == 5 || ...)
-							return 
-
-			3. Ongoing:	Recursion continues passing mutated input, number of branches may be:
-
-						Number of		Tree
-						Branches		Shape
-						________________________________________________________________________________________________________________________________________________________________
-
-						1:			Degenerate:			A straight line down from the root node until the single base case is reached.
-						Fixed			Tree (Symmetric):		A tree where each recursive method generates the fixed same number of child rm() calls.
-						Varied:			Tree (Non-Symmetric):		A tree where each recursive method generates differing number of child rm() calls, The condition is passed down as an argument with each rc(...) call.
-
-														void rc(input, condition)
-														{
-															if(baseCase == input)
-																return
-
-															for(i = 0 -> n && condition)
-																[return] rc(modifiedInput_i)
-
-															postProcessing
-														}
-
-			2. Invalid:	Recursion ceases, control immediately returns to parent rm().
-
-	Recursive Method Structure
-
-		[return type] rm(input, mutator, iLevel, condition)
-		{
-			[Base Case]
-				if(input == baseCase1 || input == baseCaseN || ...)
-					return/process [base value]
-
-			[Invalid Case]
-				if(input == inValid)
-					return
-
-			[Ongoing Case]
-				[recursive return] rm(modifiedInput_1)					//Individual (non-loopable mutations)
-				[recursive return] rm(modifiedInput_2)			
-				[recursive return] rm(modifiedInput_n)
-
-				(OR)
-
-				for(i = 0 -> mutator.n && modifiedInput_i == valid)
-					[recursive return] rm(modifiedInput_i)
-
-				(OR)
-
-				for(i = 0 -> mutator.n && modifiedInput_i == valid)			//Level/depth tracking
-					[recursive return] rm(modifiedInput_i, iLevel+1)
-
-				(OR)
-
-				for(i = 0 -> mutator.n && modifiedInput_i == valid && condition)	//Conditional rm() calls
-					[recursive return] rm(modifiedInput_i, condition))
-
-				(OR)
-
-				for(i = 0 -> mutator.n && modifiedInput_i == valid)			//Path tracking
-				{
-					alPath.add(i)
-					[recursive return] rm(modifiedInput_i)
-					alPath.remove(alPath.size-1)
-				}
-
-			[postProcessing]
-
-			[return]
-		}
-
-		[return type]
-
-			[return type]		Behaviour/Use
-			_______________________________________________________________________________________________________
-
-			void:			Traverse whole call tree processing a mutated input or external data structure
-			boolean:		Traverse whole call tree and determine if any base case exists in the call tree
-			type:			Traverse whole call tree return the nth [base value] found
-
-			Behaviour/Use depends on whether [recursive return] has been include
-
-			[recursive returns]	Behaviour
-			______________________________________________________________________
-
-			Included:		Return the [base value] in the first base case
-			Not Included:		Return the [base value] in the last base case
-
-		[input]
-
-			- Input is the unique for each rm() call.
-			- Input is mutated within the rm() and passed onto 'its own' recursive rm() calls.
-			- Input is continually reduced until reach base case (at which point return to previous rm() call).
-
-		[initial input]
-
-			- Input that is provided from the initial method would be the initial (large) input that needs to be processed in order to find the desired solutions.
-
-		[valid input]
-
-			- Valid input can be determined either:
-
-				Prior:
-
-					void rm(input)
-					{
-						if(input == baseCase)
-							process/log
-							return
-
-						if(modifiedInput == valid)			//The modified input is checked 'prior' to being passed into another instance of rm().
-							return rm(modifiedInput)
-					}
-
-				Within:
-
-					void rm(input)
-					{
-						if(input == baseCase)
-							return
-
-						if(input == invalidCase)			//The modified input is checked 'within' its own instance of rm()
-							return
-					}
-
-				[recursive return]	Form			
-				__________________________________________________________________________________________________________________________________________________________________________________________________________
-
-				Used			Prior Only		Prior must be used if [recursive return] is used. This is to prevent execution immediately returning to root/initial method when an invalid case is found.
-				Not Used		Prior | Within		Prior or Within can be used if [recursive return] is not used.
-
-			NB: Invalid Modified Input and [recursive return]
-
-				- If it is possible for invalid modified inputs to emerge, then [recursive return] can not be used for it is possible for an:
-
-					rm() to incorrectly behave as if a base case as been found.
-					rm() will naturally return rather than on-going to find further base cases.
-					rm() will return immediately to root/initial method.
-
-		[mutator]:
-
-			- Mutator is the consistent set of mutations which are applied to the input of each rm() call.
-			- Mutator may reside external to the rm() calls or 'passed down' each rm() call.
-			- Mutator is typically a set/array of values that are applied to the input.
-			- Mutator values are what form the path and particular combinations that result in a base case and are typically the sought answer to dynamic programming.
-			- Mutation may be an additive or subtractive process:
-
-				Additive: Initial input is empty or 0 and subsequent values are 'added' to reach a target value:
-
-					Initial Input:		[]					0
-					Mutator:		[] + [1]				0 + 1
-								[] + [2]...				0 + 2...
-
-					Base Case:		[1,2,6,10] (All Valid Elements)		10 (Target Value)
-
-				Subtractive: Initial input is a value and subsequent values are 'subtracted' to reach 0 or empty:
-
-					Initial Input:		[1,2,6,10]				10
-					Mutator:		[1,2,6,10] - [1]			10 - 1
-									[1,2,6,10] - [2]...			10 - 2...
-
-					Base Case:		[] (Empty)				0
-
-		[modifiedInput_i]:
-
-			- All internal ongoing rm() calls must contain a unique modified version of the input.
-
-		[recursive return]:
-
-			Used:		[recursive return] is only used when all x3 below are true:
-
-						1. No Invalid Modified Input:		No invalid case will ever be produced. Only events which cause return to the parent rm() is when a base case has been found or all rm()'s have returned.
-						2. x1 Base Case:			Only x1 (1st) base case needs to be found and then immediately return to the root/initial method.
-						3. Call Tree:				Call tree does not need to be fully traversed only via the standard sequence (below) until 1st base case is found.
-
-			Not Used:	[recursive return] is not used when need to do any of the below:
-
-						1. Invalid Modified Inputs:		Invalid modified inputs can emerge.
-						2. Multiple Base Case:			Multiple/all base cases need to be found.
-						3. Call Tree:				Call tree needs to be fully traversed.
-						4. Backtracking:			Backtracking needs to explore the whole potential call tree.
-											Backtracking may encounter invalid cases which need to be ignored (and 'backtracked') rather than cause an immediate return to root/initial method.
-
-						NB: It is fair to say that the majority of DP problem will NOT use [recursive return].
-
-			[recursive return]	Behaviour
-			_________________________________________________________________________________________________________________________________________
-
-			Included:		Return to root		Return immediately to the root/initial method upon finding first base case
-			Not Included:					Return to root/initial method naturally once whole call tree has been generated/traversed
-
-			Included:		Back Tracking		Back tracking not possible given that the first invalid case will cause recursion call stack to cease and return back to the root/initial method.
-			Not Included:					Back tracking is possible.
-
-			Included:		[postProcessing]	Does not run any statements after the rm() call, any [postProcessing] or other rm() calls are inaccessible 
-			Not Included:					Does run statements after the rm() call, any [postProcessing] or other rm() calls are accessible and ran
-
-			Included:		Base Cases		x1 base case (maximum):		Only x1 and the first base case is found and returned to root/initial method  
-			Not Included:					All base cases:			All base cases are found and nothing is returned to the root/initial method
-
-			[recursive returns] may be applied to all, some or no rm()'s:
-
-				1. All:
-
-					- All rm() [recursively return]:
-
-						for(i = 0 -> n)
-							return rm(modifiedInput_i)
-
-						[postProcessing]
-
-						Behaviour:
-
-							1. First base case found.
-							2. Execution returns immediately to the root/initial method.
-							3. Nothing else will ever execute after the rm() call one the base case has been found
-
-							[postProcessing] will never run and always inaccessible.
-
-				2. Partial:
-
-					- Partial rm() [recursively return]:
-
-						return rm(modifiedInput_1)
-						rm(modifiedInput_2)
-						return rm(modifiedInput_3)
-
-						[postProcessing]
-
-						Behaviour:
-
-							1. Upon traversing back up the call tree, program execution will depend on whether the individual parental rm() calls in the parental chain [recursively returned] or not.
-							2. If execution traverses back up the call tree due to base case, the next program execution depends on whether that particular parent rm() call [recursively returns]:
-
-								Parent rm()
-								[Recursively Return]	Behaviour
-								___________________________________________________________________________________________________________________________________________________________________________________________
-
-								Y			Execution will immediately return to its immediate parent rm() call.
-								N			Execution will continue with any statements after that particular rm() call (including other rms() calls, which may send execution down the call tree again).
-
-							3. If execution traverses back up the call tree due to base case:
-
-								Parent rm()
-								[Recursively Return]	Behaviour
-								______________________________________________________________________________________________________________________________________________________________________________
-
-								All:			If all parent rm() call's [recursively return] then execution will immediately return to the root/initial method.
-								Partial:		If a particular parent rm() call does not [recursive return] then any statements (including other rm() calls) after that particulr rm() call will run. 
-
-							[postProcessing] will never run given that the last rm() call [recursively returns] therefore execution will never get past this point in all circumstances.
-
-				3. None:
-
-					- No rm() [recursively return]:
-
-						for(i = 0 -> n)
-							rm(modifiedInput_i)
-
-						[postProcessing]
-
-						Behaviour:
-
-							1. Whole call tree will reproduced and traversed in all circumstances.
-							2. Return to the root/initial method only occurs 'naturally'
-
-							[postProcessing] will always run.
-
-			[postProcessing]
-
-				- postProcessing is run when returning 'up a level' to the parent rm() or to the 'lower' rm() call on the call stack.
-				- postProcessing is run when there is no [recursive return] on any immediate subsequent rm() call.
-
-			Natural Return:
-
-				- The 'natural' return is the return when a method naturally ends.
-				- The 'natural' return when applied to last statement has the following equivalences:
-
-					rc()							rc()							rc()
-					{							{							{
-						...							...							...
-						return rc(...)			=			rc(...)				=			rc(...)
-					}							}								return
-																				}
-			Other Forms:
-
-				- There are of course other structrual arrangements/forms which are ultimately the same as above e.g.
-
-					void rm(input)
-					{
-						[preProcess: modifiedInput]
-
-						if (input = baseCase)	process/return;
-						else 			return rm(modifiedInput)
-
-						[postProcess]	//Unreachable
-					}
-
-	Call Tree Sequence:
-
-		- Call tree sequence is always consistent in dynamic programming as shown, given that it is not an existing structure but a consequence of continual rm() calls. 
-
-											1
-					_________________________________________________________________________________________________
-					2						15						28
-			__________________________________		_________________________________		_________________________________
-			3		7		11		16		20		24		29		33		37
-	    	     _______	      ______	     ________	     ________	     ________	     ________	     ________	     ________	     ________
-	     	     4  5  6          8 9 10	     12 13 14	     17 18 19	     21 22 23	     25 26 27	     30 31 32	     34 35 36	     38 39 40
-
-		- Call tree sequence can not be determined by the structure of the rm() as in Graphs.
-		- Call tree sequence can not be determined by any of the following, the following is not applicable to dynamic programming:
-
-			1. PreOrder()
-			2. InOrder()
-			3. PostOrder()
-			4. LevelOrder()
-			5. DFT
-			6. BFT
-
-		- Call tree sequence may be consistent but it's structure is not. The structure of the call tree is of course dependent upon:
-
-			1. Initial Input
-			2. Mutators
-
-			For these x2 factors determine when base cases and invalid cases are found and where recursion ('backtracking') occurs and therefore the overall shape of the call tree.
-
-		- Call tree sequence example: Find all bases cases?
-
-			rm(input)
-    			{
-				if(input == baseCase)
-					process/log
-					return
-
-        			for(i -> mutator.n)
-        			{
-					if(modifiedInput_i == valid)
-						rm(modifiedInput_i)
-        			}
-    			}
-												rm()
-			 _______________________________________________________________________|_______________________________________________________________________________________________
-			|						|						|						|			|
-			rm()						rm()						rm()						x			rm()
-			|_______________________________		|_______________________________		|_______________________________		24			|_______________________________
-			|	|	|	|	|		|	|	|	|	|		|	|	|	|	|					|	|	|	|	|
-			rm()	x	x	rm()	x		x	x	x	x	x		x	x	x	x	x					x	x	x	x	x
-			|	6	7	|	13		14	15	16	17	18		19	20	21	22	23					25	26	27	28	29
-			|			|_______________________________
-			|			|	|	|	|	|
-			|			8	9	10	11	12
-			|_______________________________
-			|	|	|	|	|
-			1	2	3	4	5
-
-	Base Case Existance:
-
-		- Base case existance is where only need to determine if the problem has any solution.
-		- Base case existance once found need only return immediately to root and initial method once a single instance of the base case has been found.
-		- Base case existance has the following general form:
- 
-			boolean rm(input)
-    			{
-				if(input == baseCase)
-					return true;
-
-        			for(i -> mutator.n)
-        			{
-					if(modifiedInput_i == valid)
-						if(rm(modifiedInput_i))
-							return true
-        			}
-
-				return false;
-    			}
-
-	Recursive Time/Space Complexity:
-
-		- Time/space complexity of a recursive algorithm is best evaluated from the call tree.
-
-			Time Complexity:
-
-				Associated with the amount of branching:
-
-					1. What is the increase rate in the function calling itself?
-					2. What is the worse case scenario for the maximum size of the base of the call tree?
-
-			Space Complexity:
-
-				Associated with the maximum height.
-
-					1. What is the maximum height of the call tree?
-					2. What memory does each iteration of rm() use e.g. does it allocate its own memory each time, if so then that must also be taken into consideration.
-					3. What is the worse case scenario for the maximum height and memory usage within the call tree?
-
-		- For example, given the fibonacci sequence, the recursive implementation calls itself x2 per iteration:
-
-							fib(7)
-					 _______________|_______________
-					|				|
-			n = 1		fib(5)				fib(6)			Calls: 2
-					|_______			|_______
-					|	|			|	|
-			n = 2		fib(3)	fib(4)			fib(4)	fib(5)		Calls: 4
-					|	|			|	|
-
-		- Therefore as shown:
-
-			Time: 	O(2^n)
-			Space: 	O(n * m)	m: Memory used by the recursive method (if any)
-
-		- The time/space complexities can be derived by evaluating the source code but if in doubt draw out the call tree.
-		- The space complexity is derived from the following x2 facts:
-
-			1. Immediate garbage collection:	Released memory is immediately garbage collected
-			2. Maximum depth:			Maximum amount of memory that needs to be used at any one time is:
-
-									(amount of memory used in rm() call * maxmium possible depth of rm() calls in call tree) i.e. when the recursion is at the lowest point/furthest distance from root.
 
 	

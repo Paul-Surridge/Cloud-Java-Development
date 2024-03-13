@@ -1,6 +1,6 @@
 <h1>Cloud Java Development</h1>
 
-Please find a repository containing the following:
+Please find a repository containing the following folders:
 
 	1. Projects			x3 java projects for review
 	2. Screenshots			Screenshots of the x3 java projects and those from previous employer
@@ -206,3 +206,14 @@ Please find a repository containing the following:
 	9. 	Objects
 	10.	Sequences
 	11. 	Types
+
+	Techniques
+	__________________________________________________________________________________________________________
+
+	1. 	Backtracking
+	2.	BFS/DFS
+	3. 	Big O Notation
+	4.	Combinations and Permutations
+	5. 	Dynamic Programming
+	6.	Recursion
+	7.	Sliding Window
