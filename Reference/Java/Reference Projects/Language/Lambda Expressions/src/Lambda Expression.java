@@ -40,7 +40,7 @@ class ClassA
         //Without parenthesis if only x1 parameter within Abstract Method.
         itfPredicate2 = p -> p>10;
         
-        //Explcit Declaration
+        //Explicit Declaration
         itfIntegerMath = (int m, int n) ->
         {
             //Lambda Expression Body

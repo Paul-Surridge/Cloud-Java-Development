@@ -6,22 +6,22 @@ class TopLevelClass
             Within Top Level/Enclosing Form:
 
                 Top Level		Nested
-                Memory                  Class
+                Memory          Class
                 _______________________________________________
 
                 non-Static		non-Static Only
-                Static                  Static Only
+                Static          Static Only
 
                 Within the top level/enclosing form, nested classes may only be instantiated within their respective memory locations where they are declared.
 
             Within External Form:
 
                 Top Level		Nested
-                Memory                  Class
+                Memory          Class
                 _______________________________________________
 
                 non-Static		non-Static + Static
-                Static                  non-Static + Static
+                Static          non-Static + Static
 
                 An External Class, may place a nested class from either non-Static/Static memory into either its own non-Static/Static memory.
     

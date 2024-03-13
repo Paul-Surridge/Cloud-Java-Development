@@ -332,11 +332,11 @@ class Class8<T extends Number, V>
         Static Methods
     
             - Static Methods are the only Static memory which may use Generic syntax.
-            - Static Methods are in Static memory therfore can not use Class Type Parameters but only Local Type Parameters.
+            - Static Methods are in Static memory therefore can not use Class Type Parameters but only Local Type Parameters.
             - Local Type Parameters are local only to the method itself.
             - Local Type Parameters are not determined or linked to the class level Class Type Parameters.
     
-                - The static method could be used without instaniating the Generic Class within which it is defined.
+                - The static method could be used without instantiating the Generic Class within which it is defined.
                 - In which case the JVM would not know the types to used.
                 - Therefore the Local Type Parameters are completely unique and whose scope is to the static method only.
                 - Local Type Parameters shadow Class Type Parameters, therefore they may even have the same placeholder 'letter' as one declared for the Generic Class.

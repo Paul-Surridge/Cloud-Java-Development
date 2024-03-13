@@ -159,26 +159,6 @@ Please find a repository containing the following folder/files:
 	54.	Volatile Memory
 	55.	Wait and Notify
 
-	/Design Patterns
-	
-	56.	Bridge
-	57.	Composite - Geometric Shapes
-	58.	Decorator - Adapter
-	59.	Decorator - Dynamic Composition
-	60.	Decorator - Static Composition
-	61.	Decorator - String
-	62.	Facade
-	63.	Factories
-	64.	Factory Methods
-	65.	Flyweight - Repeated Usernames
-	66.	Singleton
-	67.	Singleton - Enum Based
-	68.	Singleton - Lazy Initialisation and Thread Safety
-	69.	Singleton - Monostate
-	70.	Singleton - Multiton
-	71.	Singleton - Serialisation
-	72.	Singleton - Static Block Initialisation
-
 	/Kotlin
 	__________________________________________________________________________________________________________
 
