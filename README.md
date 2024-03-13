@@ -32,7 +32,7 @@ Please find a repository containing the following folder/files:
 	Folder contains a sample of some of my research and reference material condensed into concise form
 	for quick reference of key concepts, syntax and constructs.
 
-	Cloud
+	/Cloud
 	__________________________________________________________________________________________________________
 
 	1.	Cloud Native Application Development
@@ -61,7 +61,7 @@ Please find a repository containing the following folder/files:
 	9.	Spring Boot - Example
 	10.	Spring MVC - Todo List	
 
-	Java
+	/Java
 	__________________________________________________________________________________________________________
 
 	1. 	Abstract Class - Memory Composition with Nesting
@@ -111,7 +111,7 @@ Please find a repository containing the following folder/files:
 
 	/Reference Projects
 
-	Language
+	/Language
 
 	1. 	Annotation
 	2. 	Anonymous Class
@@ -130,7 +130,7 @@ Please find a repository containing the following folder/files:
 	15. 	Static
 	16. 	System
 
-	Multithreading
+	/Multithreading
 
 	17.	Atomic Integers
 	18.	Blocking Queue
@@ -172,7 +172,7 @@ Please find a repository containing the following folder/files:
 	54.	Volatile Memory
 	55.	Wait and Notify
 
-	Design Patterns
+	/Design Patterns
 	
 	56.	Bridge
 	57.	Composite - Geometric Shapes
@@ -192,7 +192,7 @@ Please find a repository containing the following folder/files:
 	71.	Singleton - Serialisation
 	72.	Singleton - Static Block Initialisation
 
-	Kotlin
+	/Kotlin
 	__________________________________________________________________________________________________________
 
 	1. 	Annotations
@@ -207,7 +207,7 @@ Please find a repository containing the following folder/files:
 	10.	Sequences
 	11. 	Types
 
-	Techniques
+	/Techniques
 	__________________________________________________________________________________________________________
 
 	1. 	Backtracking
