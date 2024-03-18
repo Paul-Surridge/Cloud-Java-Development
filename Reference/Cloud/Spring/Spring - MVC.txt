@@ -1,0 +1,267 @@
+Spring
+
+	Spring MVC:
+
+		- Spring MVC (or Spring Web MVC) is a web framework built on the Servlet API.
+		- Spring MVC has shipped and been included within the Spring Framework from the very beginning and known as 'Spring MVC'.
+		- Spring MVC is designed around the 'front controller pattern'.
+		- Spring MVC utilises and is designed around a central Servlet 'DispatcherServlet':
+
+			- DispatcherServlet provides a shared algorithm for request processing.
+			- DispatcherServlet delegates to configurable components i.e. specialised beans to process requests and render the appropriate responses, providing flexibility and enabling the implementation of differing workflows.
+			- DispathcerServlet expects a WebApplicationContext which is an extended interface of ApplicationContext for its own configuration, WebApplicationContext registers specialised beans automatically.	
+			- DispatcherServlet is the 'front controller'.
+			- DispatcherServlet receives all of the incoming requests to the application.
+			- DispatcherServlet can map or redirect incoming requests to methods (annotated with @Controller) within 'Controller Classes'. 
+			- DispatcherServlet is used to dispatch HTTP requests to other controllers.
+			- DispatcherServlet can be registered within the application via the following x2 methods:
+
+				1. *.xml
+				2. Java Source Code
+
+		- Spring MVC enables the use of differing View technologies to render webpages e.g. Groovy Markup, Freemarker and Thymeleaf.
+		- Spring MVC integrates with other web frameworks.
+		- Spring MVC provides an 'annotation-based programming model' for example @Controller @RestController can be used against components to define:
+
+			- Request mapping
+			- Request input
+			- Exception handling
+			- Etc... 
+
+	MVC:
+
+		- MVC (Model View Controller)
+		- MVC divides the application into three components to separate the internal representation of information from the presentation to the user.
+		
+			Model:		Applications internal data, business logic and business rules.
+			View:		Applications output representation e.g. as a web form or charts.
+			Controller:	Applications control and invocation of particular models to perform business logic and updating the view based on the models output.
+
+	Annotated Controllers:
+
+		- Annotated Controllers are methods annotated with @Controller.
+		- Annotated Controllers are directed incoming HTTP requests for processing.
+		- Annotated Controllers have flexible method signatures.
+		- Annotated Controllers do not have to extend base classes.
+		- Annotated Controllers do not have to implement specific interfaces.
+
+	View/ViewResolver:
+
+		- View/ViewResolver interfaces enable the rendering of models in a browser without forcing the requirement to use specific view technology.
+		- ViewResolver provides mapping between view names and actual views.
+
+	JSP:
+
+		- JSP (Java Server Pages)
+		- JSP is a text document that contains x2 types of text:
+
+			1. Static:		Static text of any text based format e.g. HTML
+			2. Dynamic:		Dynamic JSP elements which enable the creation of dynamic content.
+
+	JSTL:
+
+		- JSTL (JavaServerPages Standard Tag Library).
+		- JSTL is a component of the Java EE Web application development platform.
+		- JSTL extends the JSP specification to provide a library which utilises JSP tags.
+		- JSTL is a collection of useful JSP tags which forms the core functionality common to many JSP applications.
+		- JSTL has tags and support for common structural tasks e.g. iteration and conditionals, manipulation of XML documents, SQL etc...
+		- JSTL tags are classified into the following library tag groups:
+
+			- Core
+
+				<c:forEach>		Iteration over a collection
+				<c:out>			Display the results of an expression
+				<c:url>			Format a URL into a String and store as a variable
+
+			- Formatting
+			- SQL
+			- XML
+			- Spring
+			- JSTL Functions
+
+	Spring MVC Application:
+
+		Name: 		'Research Projects/Spring MVC - 1 - Todo List'
+
+		Summary:
+
+			- Spring MVC Application is a web application whose output can be viewed via a browser using following URL:
+
+				http://localhost:8080/<Maven_Project_ArtifactID>/index.html
+				http://localhost:8080/todo-list/index.html
+
+			- Spring MVC Application uses the following plugins:
+
+				Maven WAR:		Generate and output the *.war file which encapsulates the web application.
+				Maven Cargo:		Generate and run the *.war within a Apache Tomcat Servlet Container which is accessible via port 8080.
+
+			- Spring MVC Application runs the web application situated within the 'webapp' directory of the project root:
+
+				src/main/webapp i.e. this directory will contain the index.html
+
+		Application Setup and Configuration:
+
+			1. pom.xml:		Add element:		<packaging>war</packaging>		Maven will package the application as a WAR i.e. package the web application archive within a *.war file.
+			2. Project Structure:	Add directory:		webapp					Directory contains all files associated with the web application e.g. *.css, *.js files.
+			3. Project Structure:	Add directory:		WEB-INF					Directory contains all files which cannot be served directly to a client of the container but are accessible to the servlet, therefore these files can be used but not sent to client. WEB-INF is not part of the public document tree.
+														Directory contains *.jsp, thymeleaf templates and configuration files.
+			4. webapp:		Add index.html:							Enter basic html to display for testing purposes.
+			5. pom.xml		Add dependency:		
+
+							<plugin>
+							    <groupId>org.apache.maven.plugins</groupId>
+							    <artifactId>maven-war-plugin</artifactId>
+							    <version>${maven-war.version}</version>
+							    <configuration>
+                    						<failOnMissingWebXml>false</failOnMissingWebXml>	//Required in order to prevent build failure due to missing webxml.xml in WEB-INF.
+							    </configuration>
+                					</plugin>
+
+				NB:
+
+					- WEB-INF | web.xml:
+
+						- Deployment *.xml for a servlet based java web application.
+						- Declares which servlets exist and which URL's they handle.
+						- Functionality of the web.xml can be implemented with annotations if required, however the WAR plugin will fail if this file is not present (unless the flag <failOnMissingWebXml> is set as shown above).
+
+					- Plugin Version:
+
+						- Plugin version does not frequently change.
+						- Plugin version can be hardcoded if required when plugin is declared within the pom.xml (but using a property is still recommended).
+
+		Annotations:
+
+			@Controller:
+
+				- @Controller is itself annotated with @Component.
+				- @Controller is an extension (specialisation) of @Component.
+				- @Controller is therefore automatically registered by Spring when @ComponentScan is ran.
+				- @Controller indicates that the annotated class is a 'web controller'.
+				- @Controller indicates to Spring that the annotated class will also need to be scanned for various other associated methods e.g. @GetMapping, @PostMapping ...
+
+			@ModelAttribute:
+
+				- @ModelAttribute declares a method which returns a type can be included within a file which constitutes as being the View.
+
+			@RequestMapping:
+
+				- @RequestMapping maps incoming HTTP requests to specific @Controller methods.
+				- @RequestMapping has a number of attributes which can be used for mapping:
+
+					- URL			- Request Parameters		- Media Types
+					- Http Method		- Headers
+
+				- @RequestMapping has a number of shortcut variants (which have been available since Spring 4.3):
+
+					Shortcut Variants	HTTP Request
+					____________________________________
+
+					@GetMapping		GET
+					@PostMapping		POST
+					@PutMapping		PUT
+					@DeleteMapping		DELETE
+					@PatchMapping		PATCH
+
+			@RequestParam:
+
+				- @RequestParam references a parameter supplied within the URL of HTTP request:
+
+					http://localhost:8080/todo-list/welcome?user=Paul
+					http://localhost:8080/todo-list/welcome?user=Paul&age=28
+
+					- Request parameter 'user' whose value is 'Paul'.
+					- Request parameter 'age' whose value is '28'.
+
+			@ResponseBody:
+
+				- @ResponseStatus informs Spring to bind the return of the annotated method to the web response body and be displayed within browser.
+				- @ResponseStatus can be used for simple testing purposes.
+
+		Architecture:
+
+			Spring Container________________________		'context'
+			|					|
+                    	|  Tomcat Application Server_________	|		'servletContext'
+			|  |				     |  |
+                        |  |  Dispatcher Servlet__________   |  |		'dispatcherServlet'
+			|  |  |				  |  |  |
+			|  |  |				  |  |  |
+			|  |  |				  |  |  |
+			|  |  |				  |  |  |
+
+
+		Application Build, Compile and Execute:
+
+			1. Maven:		Pulls in dependencies.
+
+			2. Maven:		Pulls in particular plugins:
+
+							Maven WAR:
+
+								- Builds *.war file.
+								- *.war file contains all elements to run a web application into a single *.war (web application archive) file.
+								- *.war file is eventually outputted into the Maven 'target' directory.
+
+							Maven Cargo:
+
+								- Builds an embedded Apache Tomcat Application Server.
+								- *.war is run within the Tomcat Application Server.
+								- *.war can be interacted and manipulation (via Maven goals) whilst running within Tomcat Application Server.
+
+			3. Entry Point:		The entry point to the program is as follows:
+
+							1. WebApplicationInitializer:		Spring will look for the x1 single class that implements the interface 'WebApplicationInitializer'.
+							2. onStartup():				Spring will invoke the startup method.
+
+			4. Spring Container:	Spring Container 'context' is created.
+
+			5. Spring Container:	Spring Container is passed the webconfig.java configuration class.
+
+							webconfig.java:		Contains all bean definitions to be housed within the Spring Container.
+
+			6. Tomcat:		Tomcat is passed an instance of the DispatcherServlet:
+
+							DispatcherServlet:	All incoming traffic is directed to the DispatherServlet and forwarded/delegated onto applicable @Controllers classes.
+
+			7. Dispatcher Servlet:	Dispatcher Servlet is configured to:
+
+							1. Startup:		Automatically startup when Tomcat starts up.
+							2. Map:			Map all incoming traffic to the 'webapp' directory in the project root.
+
+							e.g http://localhost:8080/todo-list/ 			-> webapp
+							    http://localhost:8080/todo-list/welcome		-> webapp/welcome
+
+			8. Dispatcher Servlet:	URL of the incoming traffic from the browser is passed to all @Controller classes for parsing/processing.
+
+			9. Controller Class:	Contains methods and appropriate annotations to process the particular URL.
+
+	MVC Request Processing:
+
+		1. Browser makes a request to specific URL
+		2. Browser 			-> Dispatcher Servlet			Dispatcher Servlet is the 'front controller' therefore is first to receive the request from the browser.
+		3. Dispatcher Servlet 		-> Handler Mapping			Dispatcher Servlet passes the URL to 'Handler Mapping' to identify which controller will handle the request.
+		4. Handler Mapping		-> Dispatcher Servlet			Handler Mapping returns the specific Controller and Handler Method that will handle the request.
+		5. Dispatcher Servlet		-> Controller				Dispatcher Servlet invokes the particular Handler Method within the particular Controller defined to handle that particular request.
+		6. Controller			-> Dispatcher Servlet			Controller (via the local Handler Method) returns the Model/View name.
+		7. Dispatcher Servlet		-> View Resolver			Dispatcher Servlet passes the Model/View name to the 'View Resolver' to find the corresponding file for that model/view.
+		8. View Resolver		-> Dispatcher Servlet			View Resolver returns the corresponding file to the Dispatcher Servlet.
+		9. Dispatcher Servlet							Dispatcher Servlet executes the file, generating the model.
+		10. Dispatcher Servlet		-> View					Dispatcher Servlet passes the model to the view.
+		11. View								View content is rendered/constructed.
+		12. View			-> Dispatcher Servlet			View passes the rendered content to Dispatcher Servlet.
+		13. Dispatcher Servlet		-> Browser				Dispatcher Servlet builds and sends the final/complete response to the browser.
+
+	Model and @ModelAttribute:
+
+		- Model is an interface.
+		- Model is a holder of Model Attributes.
+		- Model is passed data from:
+
+			Dispatcher Servlet -> View
+
+		- Model can have annotations applied for use by the View when being rendered/constructed.
+		- Model attributes can be added via:
+
+			1. Model Object:	Attributes can be added to the Model object passed from the Dispatcher Servlet.
+			2. Annotation:		Attributes can be added to the Model object using the @ModelAttribute annotation.

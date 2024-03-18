@@ -1,0 +1,226 @@
+Spring
+
+	XML Configuration:
+
+		- XML Configuration individual files represents/defines a logical layer or module in overall architecture.
+		- XML Configuration has the following general form:
+
+			<beans 	xmlns="http://www.springframework.org/schema/beans"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:schemaLocation="http://www.springframework.org/schema/beans
+				https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+				<bean id="myBean1" class="fully.qualified.package">  
+																		<!-- Additional collaborators and configuration for bean -->
+				</bean>
+
+				<bean id="myBean2" class="fully.qualified.package">
+
+				</bean>
+
+				...
+
+				<bean id="petStore" class="org.springframework.samples.jpetstore.services.PetStoreServiceImpl">			<!-- Service Bean -->
+					<property name="accountDao" ref="accountDao"/>
+					<property name="itemDao" ref="itemDao"/>
+																		<!-- Additional collaborators and configuration for bean -->
+				</bean>
+
+				<bean id="accountDao" class="org.springframework.samples.jpetstore.dao.jpa.JpaAccountDao">			<!-- DAO Data Access Object Bean -->
+																		<!-- Additional collaborators and configuration for bean -->
+				</bean>
+
+				<bean id="itemDao" class="org.springframework.samples.jpetstore.dao.jpa.JpaItemDao">				<!-- DAO Data Access Object Bean -->
+																		<!-- Additional collaborators and configuration for bean -->
+				</bean>
+
+			</beans>
+
+			Here:
+
+				Element:	Attribute	Defines
+				-----------------------------------------------------------------------------------------------------------------------------
+				<bean		id:		String identifies individual bean definition
+						name:		Alias used in addition to id
+						class:		Type of bean using fully qualified class name.
+								Corresponds/sets to the stored Class property in the BeanDefinition object.
+								Usually mandatory except when using an Instance Factory Method or Bean Inhertitance.
+								Attribute can be used in x3 ways:
+
+									1. Constructor:		Specify the class to be created by calling its constructor reflectively i.e. as is calling new
+
+													<bean id="exampleBean" class="examples.ExampleBean"/>
+													<bean name="anotherExample" class="examples.ExampleBeanTwo"/>
+
+									2. Factory Method:	Specify a static factory method of a class which my return an instance of that class or a different class entirely i.e. whatever is implemented within the factory method.
+									
+													<bean id="clientService"
+													      class="examples.ClientService"		//NB: Class is not the class to be instantiated but that which contains the static factory method
+													      factory-method="createInstance"/>
+
+													For a bean as follows:
+
+														public class ClientService {
+															private static ClientService clientService = new ClientService();
+															private ClientService() {}
+
+															public static ClientService createInstance() {
+																return clientService;
+															}
+														}
+
+												Specify an instance factory method of an existing bean that already exists in the container:
+
+													<bean id="serviceLocator" class="examples.DefaultServiceLocator"/>
+
+													<bean id="clientService"
+													      factory-bean="serviceLocator"
+													      factory-method="createClientServiceInstance"/>
+
+													<bean id="accountService"
+														factory-bean="serviceLocator"
+														factory-method="createAccountServiceInstance"/>
+
+													For a bean as follows:
+
+														public class DefaultServiceLocator {
+															private static ClientService clientService = new ClientServiceImpl();
+															private static AccountService accountService = new AccountServiceImpl();
+
+															public ClientService createClientServiceInstance() {
+																return clientService;
+															}
+
+															public AccountService createAccountServiceInstance() {
+																return accountService;
+															}
+														}
+
+									3. Static Nested:	Specify a static nested class using . or $:
+
+													com.example.MyClass.MyStaticNestedClass
+													com.example.MyClass$MyStaticNestedClass
+
+													NB: The binary name or source name for the static nested class can be used.
+
+				<property	name:		Name of bean property
+						ref:		Type of bean property, this highlights/indicates the dependecy between 'collaborating objects'
+
+		- XML Configuration can be combined/concatented using <import/> element:
+
+			<beans>
+				<import resource="services.xml"/>
+				<import resource="resources/messageSource.xml"/>
+				<import resource="/resources/themeSource.xml"/>
+
+				<bean id="bean1" class="..."/>
+				<bean id="bean2" class="..."/>
+			</beans>
+
+			Here:
+
+				1. Additional *.xml files are automatically imported when the overall *.xml is read in.
+				2. The path a relative to the location of the overall *.xml:
+
+					service.xml:		Located in same folder as overall *.xml
+					messageSource.xml:	Located in folder 'resources' inside same folder as overall *.xml
+					themeSource.xml:	Located in folder 'resources' inside same folder as overall *.xml
+
+					NB: The leading / is ignored however it is best practice to not include.
+
+				3. <import/> is provided via the namespace as defined in <beans/>.
+
+					NB: XML Configuration files can contain configuration other than just bean definitions by using differing namespaces e.g. 'context' and 'util'.				  
+
+		- XML Configuration files that are defined and imported must contain valid bean definitions and adhere to the Spring Schema.
+		- XML Configuration files can also be referenced using:
+
+			1. Relative Parent Directories:
+
+				Using a relative ../ path:
+
+					Classpath URL:		classpath:../service.xml
+
+				However this is not recommended for when runtime resolution runs it will choose the 'nearest' classpath root and look in its parent directory, which will of course be subject to change thereby not finding the services.xml 
+
+			2. Fully Qualified:
+
+					File URL:		file:C:/config/services.xml
+					Classpath URL:		classpath:/config/services.xml
+
+				However this is not recommended due to the coupling of the application to specific locations.
+
+		- XML Configuration files should ideally always be referenced indirectly e.g. using "${...}" placeholders.
+		- XML Configuration files may include the 'inline' definition for a primitive value i.e. where the value of an int is 'hardcoded' into the XML file and is passed straight into the receiving method (be that a constructor or factory method)
+
+			<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+				<property name="driverClassName" value="com.mysql.jdbc.Driver"/>					<!-- results in a setDriverClassName(String s) call -->
+				<property name="url" value="jdbc:mysql://localhost:3306/mydb"/>
+				<property name="username" value="root"/>
+				<property name="password" value="misterkaoli"/>
+			</bean>
+
+			public void setDriverClassName(String s) {		//NB: Need to check/test is having the parameter name set to 's' or needs to be set to 'driverClassName'
+				this.s = s;
+			}
+
+			NB: This can be further refined using p-namespace:
+
+				<beans xmlns="http://www.springframework.org/schema/beans"
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					xmlns:p="http://www.springframework.org/schema/p"
+					xsi:schemaLocation="http://www.springframework.org/schema/beans
+					https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+					<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+						destroy-method="close"
+						p:driverClassName="com.mysql.jdbc.Driver"
+						p:url="jdbc:mysql://localhost:3306/mydb"
+						p:username="root"
+						p:password="misterkaoli"/>
+
+				</beans>
+
+		- XML Configuration files make use of the <idref/> element which allows for typos in xml to be found during compile time rather than runtime.
+
+			<bean id="theTargetBean" class="..."/>
+			<bean id="theClientBean" class="...">
+				<property name="targetName">
+					<idref bean="theTargetBean"/>
+				</property>
+			</bean>
+
+			[The above is equivalent to the following (which will only find typos during runtime)]:
+
+				<bean id="theTargetBean" class="..." />
+
+				<bean id="client" class="...">
+					<property name="targetName" value="theTargetBean"/>
+				</bean>
+
+	Groovy Configuration:
+
+		- Groovy Configuration is similar to XML Configuration expect that the configuration is contained within a *.groovy file using Springs Groovy Bean Definition DSL:
+
+			beans {
+				dataSource(BasicDataSource) {
+					driverClassName = "org.hsqldb.jdbcDriver"
+					url = "jdbc:hsqldb:mem:grailsDB"
+					username = "sa"
+					password = ""
+					settings = [mynew:"setting"]
+				}
+				sessionFactory(SessionFactory) {
+					dataSource = dataSource
+				}
+				myService(MyService) {
+					nestedBean = { AnotherBean bean ->
+						dataSource = dataSource
+					}
+				}
+			}
+
+		- Groovy Configuration supports:
+
+			1. Spring XML Namespaces.
+			2. Importation of XML Configuration files vi importBean directive.

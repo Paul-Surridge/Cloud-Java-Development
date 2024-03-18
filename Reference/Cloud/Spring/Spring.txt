@@ -1,0 +1,171 @@
+Spring Framework:
+
+	Overview:
+
+		- Spring Framework written in java and actively maintained by Spring.
+		- Spring Framework broadly involves:
+
+			1. Beans - Definition:		Define beans to be made available within container via:												[Compile Time Checking]
+
+								1. *.xml file:					Contain bean definitions within an external *.xml file.					-
+								2. Java Source Code - Annotations:		Contain bean definitions within the java source code, identified using annotations.	Y
+
+			2. Container:			Instantiate Spring IoC container and register all bean definitions in the java source code.
+
+			3. Beans - Instantiation:	Instantiate beans within container as instantiated within the source code during runtime:
+
+								1. *.xml file:					Reference bean definitions in external *.xml file.
+								2. Java Source Code - Annotations:		Reference bean definitions registered by Spring via annotations.
+
+	Container:
+
+		- Container is IoC 'Inversion of Control':
+
+			1. Beans:			Beans are housed within the container.
+			2. Bean Management:		Bean lifecycles are managed by the container.
+
+			IoC Meaning:
+
+				- Container controls the instantiation of beans and bean dependencies.
+				- Opposed to the bean itself instantiating its own internal objects itself in the normal way.
+				- The control/responsibility of instantiation is inverted. 
+
+		- Container is represented and accessible via the ApplicationContext interface.
+		- Container is and its definitions are contained withing packges:
+
+			org.springframework.beans
+			org.springframework.context
+
+		- Container can be considered an advance factory for generating and maintaining a registry of its current beans and (any) of their dependencies which can be accessed vi the ApplicationContext interface.	
+
+	Configuration:
+
+		- Configuration is the general process/term used to describe the 'configuring' of the container.
+		- Configuration is achieved by the use of metadata to describe/define the content and functionality of the container.
+		- Configuration informs the container how to instantiate, configure and assemble the object/beans within the container. 
+		- Configuration can be known as the 'Configuration Metadata' i.e. the data about/describing the configuration.
+		- Configuration format is completely decoupled from the container i.e. the container does not care/specify the source formt of the configuration.
+		- Configuration can be defined in many areas and means including:
+																								[Compile Time Checking]
+			1. XML File:			Define beans within an external *.xml file.												-
+			2. Java Annotations:		Define beans internally within application classes using annotations.									Y
+			3. Java Source Code:		Define beans external to application classes by using Java rather than XML files e.g. @Configuration @Bean @Import @DependsOn. 		Y
+			4. Groovy File:			Define beans within an external *.groovy file.												-
+
+			NB: Java based configuration is achieved must be defined/specified/enabled within the XML file.
+
+		- Configuration must define a minimum of x1 bean that the container must manage.
+		- Configuration is not expected to configure/define fine-grained domain objects, it is expected that these be pulled from respective repositories.
+
+	Metadata:						
+
+		- Spring Framework makes extensive use of metadata on how to build and manage the container and its contents.
+		- Spring Framework metadata is contained within either *.xml or annotations:
+
+			XML (*.xml file):
+
+				Pros:
+
+					- XML encourages separation of concerns.
+					- XML is kept external to the source code.
+					- XML is relatively limited in size and easily viewed.
+					- XML does not require recompilation upon modification.
+					- XML requires the least amount of text/files to changed upon modification.
+					- XML is more centralised.
+					- XML is more verbose and may be preferable in providing clarity for beginners. 
+
+				Cons:
+
+					- XML is error prone, typos are difficult to spot and debug (even though there are many tools available to validate *.xml files).
+					- XML may lead to runtime errors:
+
+						1. Java Source Code:	Java source code is modified where an additional argument is added to a beans constructor.
+						2. XML:			*.xml file is not updated with this additional argument.
+						3. Runtime Error:	Program will run and this issue will not be noticed until the bean is instantiated during runtime.
+
+					- XML is not type-safe i.e. no compiler will check the manually typed types passed during dependency injection.
+					- XML can lead to ill-fitting awkward constructs which are more simple to be implemented within java source code.
+
+			Annotations:
+
+				Pros:
+
+					- Annotations tend to lead to shorter more concise configuration overall.
+					- Annotations allows for dependency injection to be alot closer to the source code rather than being kept in separate *.xml file(s).
+					- Annotations ensure type-safety.
+					- Annotations are checked at compile time.
+					- Annotations self-document the source code providing more immediate clarity on what is being injected by Spring rather than having to refer to a separate *.xml file.
+
+				Cons:
+
+					- Annotations reside within and clutter source code.
+					- Annotations are more decentralised leading to configuration metadata being spread throughtout the codebase, leading to an overall lack of centralised oversight and control of the configuration.
+					- Annotations require recompilation of source code upon modification.
+					- Annotations maybe considered less intuitive due their brevity in particular for students of Spring.
+
+			Summary:
+
+				- No Ideal:		No ideal approach, generally a combination of both *.xml and annotations are deployed.
+				- Project:		Project requirements generally determine the ideal approach e.g. using the conventions already within an existing project.
+				- Industry:		Industry trend is generally to use annotations over *.xml.
+				- Synchronous:		Synchronous behaviour and outcome can be achieved using either *.xml or annotations i.e. a table of equivalent/matching XML elements and annotations.
+				- @Component:		@Component annotation goes some way in providing the best of both *.xml and annotations.
+
+	Console Output Flags:
+
+		Console output strings that are useful for debugging:
+
+		1. Bean Registration - via @Bean:
+
+			> Registering a bean definition via @Bean:
+
+				- Search String: 'Registering'.
+				- Bean has been successfully created, instantiated and added to the container.
+
+		2. Bean Registration - via @Component:
+
+			> Registering a bean definition @Component:
+
+				- Search String: 'Identified'.
+				- Bean has been successfully created, instantiated and added to the container.
+
+		3. Autowiring - via Constructor Parameter:
+
+			> Autowiring and injecting a bean into a parameter within a constructor parameter list:
+
+				- Search String: 'via constructor'.
+				- Bean has been successfully injected into a constructor parameter.
+
+		4. Property Value:
+
+			> Property value within a *.properties file injected into source code:
+
+				- Search String: 'Found key'.
+				- Successful insertion of value from *.properties file.
+
+	Debug Techniques:
+
+		Scroll to end:
+
+			- Ensure to scroll to the end of any reported exception within the console output:
+
+						Output			Issue Occurence
+						___________________________________________________________________
+			
+				Java		Stack Trace		Issue reported at the first outputted lines
+				Spring		Console Output		Issue reported at the last outputted lines
+
+	Exceptions:
+
+		- Spring is written in Java.
+		- Spring is not an integral part of the Java language whose correctness is checked by the compiler.
+		- Spring therefore uses exceptions should the instantiated container (via interface ApplicationContext) encounter a problem.
+		- Spring outputs all exceptions to the console.
+
+	
+
+
+
+
+	
+

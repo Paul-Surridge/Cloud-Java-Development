@@ -1,0 +1,83 @@
+Spring
+
+	Spring Boot:
+
+		- Spring Boot is a framework that enables the building of standalone, production-grade Spring based applications that can run easily and quickly.
+		- Spring Boot does not require the configuration to be repeated for each application.
+		- Spring Boot applications typically require very little Spring configuration which is mainly auto-configured.
+		- Spring Boot main features include:
+
+			1. Spring Boot starters:
+
+				- Modules to quickly get started with commonly used technologies e.g. Spring MVC, JPA ...
+				- Modules are pre-configured with the most commonly used library dependencies removing the need to manually research, find and configure compatible libraries.
+
+			2. Spring Boot auto-configuration:
+
+				- Auto-configuration is applied to many components automatically.
+				- Auto-configuration removes the need to manually setup much boilerplate configuration e.g. if project contains spring-webmvc dependency, a DispatcherServlet is registered automatically.
+
+			3. Spring Boot encorporates an easy to use embedded servlet container.
+
+				- Web applications typically require creating and deploying *.war file to run within a Tomcat server.
+				- Web applications can alternatively be housed within a self-contained *.jar file with an embedded servlet container.
+
+			4. Spring Boot utilises elegant configuration management.
+
+	Initializr:
+
+		- Initializr in an online Spring Boot application generator used to create Spring Boot application from scratch.
+
+	Project Structure:
+
+		- Initializr will create a project of the following structure:
+
+			Spring-Boot-Project:						Project root directory
+				.idea
+				.mvn
+					wrapper
+						maven-wrapper.jar
+						maven-wrapper.properties
+				src							Source directory for module
+					main
+						java
+						resources				Project resources e.g. images, configuration files ...
+							static				Static resources e.g. css, js, html ...
+							templates			Template resources e.g. thymeleaf, groovy ...
+							application.properties		
+					test						Source directory for unit tests
+						java
+				.gitignore
+				boot-demo.iml
+				mvnw							Startup batch script used when running from console
+				mvnw.cmd						Startup batch script used when running from console (Windows)
+				pom.xaml
+
+			External Libraries
+				...
+
+	
+	Developer Tools:
+
+		- Spring boot has many developer tools to assist in application development including:
+
+			- Auto Update:
+
+				- Auto update can sense when files have changed on the classpath and run an automatic restart of the application.
+				- Auto update enables the quick editing of templates without the need to manually stop/start the application.
+
+	Notes:
+
+		- Logback.xml Rename:
+
+			- Logback.xml should be renamed as Logback-Spring.xml when within a Spring Boot project.
+			- This enables Spring to be fully in control of all aspects of the initailsiation process.
+
+		- ANSI Console Output:
+
+			- Within application.properties:
+
+				# enable ansi output
+				spring.output.ansi.enabled = always
+
+			- This will cause the console output to be colour coded and easier to read.

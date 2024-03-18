@@ -1,0 +1,123 @@
+Spring
+
+	Application Context:
+
+		- Application Context is an extended interface of BeanFactory.
+
+			org.springframework.context.ApplicationContext
+
+		- Application Context is more refined and specific to enterprise applications, BeanFactory provides basic configuration and framework.
+		- Application Context represents the Spring IoC container and is responsible for instantiating, configuring and assembling all beans.
+		- Application Context has several implementations with Spring e.g.
+
+								Constructor Arguments
+								---------------------
+			ClassPathXmlApplicationContext		*xml files
+			FileSystemXmlApplicationContext		*xml files
+			GenericGroovyApplicationContext		*groovy files
+			GenericApplicationContext		*groovy or *xml files	(presume same type only, not combinationn of *.xml and *.groovy)
+
+		- Application Context is passed the configuration resources via the constructor e.g. :
+
+			ApplicationContext context = new ClassPathXmlApplicationContext("services.xml", "daos.xml");
+
+			NB: Contructor arguments may be from various sources e.g:
+
+				1. File System:		Something located on local file system.
+				2. Java CLASSPATH:	Something defined on Java CLASSPATH.
+				3. Resource:		An abstraction for defining multiple resources defined in URI syntax.
+
+		- Application Context can be used to access the internal beans of the current container:
+
+			XML Configuration:
+	
+				ApplicationContext context = new ClassPathXmlApplicationContext("services.xml", "daos.xml");			// Pass in the *.xml configuration files whereby creating and configuring beans
+				
+				PetStoreService service = context.getBean("petStore", PetStoreService.class);					// Extract instance of the 'PetStoreService'
+
+				List<String> userList = service.getUsernameList();								// Further use/interrogate the current state of the bean
+
+			Groovy Configuration:
+
+				ApplicationContext context = new GenericGroovyApplicationContext("services.groovy", "daos.groovy");
+
+			Generic Configuration (inconjunctionn with Reader Delegates)
+
+				GenericApplicationContext context = new GenericApplicationContext();
+
+				new XmlBeanDefinitionReader(context).loadBeanDefinitions("services.xml", "daos.xml");				//Reader Delegate for XML Configuration
+				context.refresh();
+
+				[Or]
+
+				new GroovyBeanDefinitionReader(context).loadBeanDefinitions("services.groovy", "daos.groovy");			//Reader Delegate for Groovy Configuration
+				context.refresh();
+
+				NB: It is possible to mix and match such reader delegates on the same generic Application Context i.e. read in configuration from differing sources
+
+			NB: In general it should not be necessary to need to read in and interrogate the internals of a container i.e. best left alone.
+
+		- Application Context allows for the inclusion/registration of objects created outside of the container:
+
+			1. Object is created outside of container.
+			2. Object is pulled in and registered as a bean within the container.
+
+			NB: 
+				- This is via the 'BeanFactory' using getBeanFactory() and registering the external object, however this generally should be avoided and define beans using the normal way.
+				- Any external objects that are registered as beans should be completed as early as possible in order to ensure that the containers autowiring/introspection process allows for the container to be built properly.
+				- The registration of external objects at runtime is available but not recommended/supported whereby possibly leading to concurrent access exceptions and/with unstable/inconsistent container state. 
+
+	Events:
+
+			- ApplicationContext implements interface ApplicationEventPublisher which encapsulates event publication functionality.
+			- ApplicationContext is therefore able to handle events via the use of the following entities:
+
+				1. Class:		ApplicationEvent
+				2. Interface:		ApplicationListner
+
+				Bean implements ApplicationListner and will receive ApplicationEvents published to the ApplicationContext (standard Observer design pattern).
+
+			- Application events can be listened via x2 ways:
+
+				1. Interface: ApplicationListener
+
+					1. Bean implement ApplicationListener.
+
+						- Bean will now have the necessary interface to enable the container ApplicationContext to pass in events which a bean instantiation can listen for.
+
+					2. Bean override:
+
+						@Override
+    						public void onApplicationEvent(ContextRefreshedEvent event) {
+        					    log.info("Container ready for use.");
+    						}
+
+					3. Bean will receive events depending upon the particular event specified in the parameter.
+
+ 						- onApplicationEvent() is an overloaded method.
+						- Parameter determines which event type will be listened to and returned e.g. in this case a ContextRefreshedEvent.
+
+				2. Annotation: @EventListner
+
+					- Annotations can be added to methods to enable them to receive event notifications:
+
+						@EventListner
+    						public void onRenamedApplicationEvent(ContextRefreshedEvent event) {
+        					    log.info("Container ready for use.");
+    						}
+
+					- Annotations enable the method to be called other more appropriate names other than onApplicationEvent().
+					- Annotations allow the parameter to specify the type of event that is listened for by this particular listner method.
+
+						@EventListner(ContextRefreshedEvent.class)
+    						public void onRenamedApplicationEvent() {
+        					    log.info("Container ready for use.");
+    						}
+
+						NB: Annotations with only x1 element named 'value' can omit the 'value =' when the annotation is deployed.
+
+							@EventListner(value = ContextRefreshedEvent.class)
+							@EventListner(ContextRefreshedEvent.class)
+
+					- Annotation is passed the type of event to listen for compared to an overriden onApplicationEvent() and having to include a parameter that may not necessarily be used within the body of the method.
+					- Annotation can be expanded to listen for multiple events (presumably by passing multiple events into the annotation).

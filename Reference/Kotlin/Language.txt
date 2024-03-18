@@ -54,7 +54,6 @@ Kotlin
 		- Kotlin requires that all variables and expressions must be defined or return a type.
 		- Kotlin does not implement dynamic variables which can be reassigned their type.
 		- Kotlin implements type inference from the context of the variable initialisation or function return type.
-
 	
 	static
 
