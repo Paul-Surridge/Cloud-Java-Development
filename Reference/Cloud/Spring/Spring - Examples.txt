@@ -1,0 +1,26 @@
+Spring - Examples:
+
+	XML Configuration: Inline values of arguments
+	XML Configuration: How to define a Bean using constructor DI
+	XML Configuration: How to define a Bean using setter DI
+	XML Configuration: How to define a Bean using static factory method DI
+	XML Configuration: How to define a Bean using instance factory method DI
+
+	Java Source: How to instantiate a bean using constructor DI
+	Java Source: How to instantiate a bean using setter DI
+
+	Java Source: How to return a bean using static factory method DI
+	Java Source: How to return a bean using instance factory method DI
+
+	
+
+
+	Java Source: How to construct a static factory method DI
+	Java Source: How to construct a setter method DI
+
+	Java Source: How to set a bean using constructor DI
+	Java Source: How to set a bean using setter DI
+
+
+
+	

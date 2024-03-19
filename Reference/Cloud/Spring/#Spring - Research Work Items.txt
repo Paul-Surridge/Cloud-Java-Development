@@ -1,5 +1,28 @@
 Spring - Research Work Items
 
+	Arrange:
+
+		Document: Project Structures
+
+			Components/Areas/Conceptual/Logical Areas
+
+			What it is
+			What is purpose
+
+			Properties Files
+			Configuration
+			Source Code
+
+		Document:
+			Component + Concepts
+				What it is
+				What is purpose
+				Notes/Points/Rules
+		
+		Document:
+			How Tos/Sequences
+			Examples Of
+
 	Collate:
 
 		List of all Annotations

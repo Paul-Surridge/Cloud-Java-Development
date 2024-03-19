@@ -1,0 +1,37 @@
+Glossary - Spring:
+
+	Collaborating Objects:
+
+		- An objects internal references to other objects i.e. the properties of a class.
+
+			class ClassA
+			{
+			    ClassB B = new ClassB();
+			    ClassC C = new ClassC();
+
+		- An instance of Class collaborates with instances of ClassB and ClassC.
+
+	Configuration Methods:
+
+		- Setter methods used to inject dependencies into beans.
+
+	Factory Bean:
+
+		- A general bean which is used to instantiate other beans via static or instance factory methods.
+		- A FactoryBean (opposed to just general bean) is an implementation within Spring.
+
+	Layer:
+
+		- Layer is a common abstraction used to logically group and categorise multiple components within an application (rather than taking some physical form representing a layer).
+		- Layer should be considered as:
+
+			'Service Layer':		All components associated with and providing the Service functionality of the overall application.
+			'Data Layer':			All components associated with and providing the Data storage/retrival functionality of the overall application.
+
+	Sub-Element Types:
+
+		- Sub-Element Types are/apper to be another name for attributes within an XML element:
+
+			<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+
+			'name' and 'value' are sub-element types within the <property/> element.

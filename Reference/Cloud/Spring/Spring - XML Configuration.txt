@@ -1,8 +1,22 @@
-Spring
+Spring - XML Configuration:
 
-	XML Configuration:
+	Overview:
 
 		- XML Configuration individual files represents/defines a logical layer or module in overall architecture.
+
+	Purpose:
+
+		- XML Configuration files defines the skeletal structure of the beans that are contained withn the container.
+		- XML Configuration files do not define the actual implementation but only aspects necessary for the beans to be managed by the container e.g.
+
+			1. ID
+			2. Names/Alias
+			3. Scope
+			4. Location of package/class containing implementation
+			5. Dependencies of the individual beans i.e. the additional local beans that need to be injected into class (how they are wired together).
+
+	General Form:
+
 		- XML Configuration has the following general form:
 
 			<beans 	xmlns="http://www.springframework.org/schema/beans"
@@ -11,11 +25,11 @@ Spring
 				https://www.springframework.org/schema/beans/spring-beans.xsd">
 
 				<bean id="myBean1" class="fully.qualified.package">  
-																		<!-- Additional collaborators and configuration for bean -->
+				    ...														<!-- Additional collaborators and configuration for bean -->
 				</bean>
 
 				<bean id="myBean2" class="fully.qualified.package">
-
+				    ...
 				</bean>
 
 				...
@@ -23,15 +37,15 @@ Spring
 				<bean id="petStore" class="org.springframework.samples.jpetstore.services.PetStoreServiceImpl">			<!-- Service Bean -->
 					<property name="accountDao" ref="accountDao"/>
 					<property name="itemDao" ref="itemDao"/>
-																		<!-- Additional collaborators and configuration for bean -->
+				    ...														<!-- Additional collaborators and configuration for bean -->
 				</bean>
 
 				<bean id="accountDao" class="org.springframework.samples.jpetstore.dao.jpa.JpaAccountDao">			<!-- DAO Data Access Object Bean -->
-																		<!-- Additional collaborators and configuration for bean -->
+				    ...														<!-- Additional collaborators and configuration for bean -->
 				</bean>
 
 				<bean id="itemDao" class="org.springframework.samples.jpetstore.dao.jpa.JpaItemDao">				<!-- DAO Data Access Object Bean -->
-																		<!-- Additional collaborators and configuration for bean -->
+				    ...														<!-- Additional collaborators and configuration for bean -->
 				</bean>
 
 			</beans>
@@ -40,71 +54,305 @@ Spring
 
 				Element:	Attribute	Defines
 				-----------------------------------------------------------------------------------------------------------------------------
-				<bean		id:		String identifies individual bean definition
-						name:		Alias used in addition to id
+				<bean		id:		String identifies individual bean definition.
+
+						name:		Alias used in addition to id.
+
 						class:		Type of bean using fully qualified class name.
 								Corresponds/sets to the stored Class property in the BeanDefinition object.
 								Usually mandatory except when using an Instance Factory Method or Bean Inhertitance.
-								Attribute can be used in x3 ways:
 
-									1. Constructor:		Specify the class to be created by calling its constructor reflectively i.e. as is calling new
+	Constructor or Setter:
 
-													<bean id="exampleBean" class="examples.ExampleBean"/>
-													<bean name="anotherExample" class="examples.ExampleBeanTwo"/>
+		- XML Configuration files can define how the beans are passed/injected/wired into other beans, there are x2 main means of wiring beans:
 
-									2. Factory Method:	Specify a static factory method of a class which my return an instance of that class or a different class entirely i.e. whatever is implemented within the factory method.
-									
-													<bean id="clientService"
-													      class="examples.ClientService"		//NB: Class is not the class to be instantiated but that which contains the static factory method
-													      factory-method="createInstance"/>
+			1. Constructor:		Dependencies are passed/injected/wired via the constructor and assigned to local reference variable(s)/properties of the injected types.	<constructor-arg/>
+			2. Setter:		Dependencies are passed/injected/wired via setter methods and assigned to local reference variable(s)/properties of the injected types.		<property/>
 
-													For a bean as follows:
+	Bean Definitions:
 
-														public class ClientService {
-															private static ClientService clientService = new ClientService();
-															private ClientService() {}
+		- XML Configuration files can define beans (and the corresponding means of injection within the source code) in following ways:
 
-															public static ClientService createInstance() {
-																return clientService;
-															}
-														}
+			1. Constructor: No Arguments
 
-												Specify an instance factory method of an existing bean that already exists in the container:
+				Specify the class to be created by calling its constructor reflectively i.e. as if simply calling new
 
-													<bean id="serviceLocator" class="examples.DefaultServiceLocator"/>
+				[XML Config]
 
-													<bean id="clientService"
-													      factory-bean="serviceLocator"
-													      factory-method="createClientServiceInstance"/>
+					<bean id="ClassA" class="com.MyApplication.ClassA"/>			//No argument constructor ('raw JavaBean style')
+					<bean name="ClassB" class="com.MyApplication.ClassB"/>
 
-													<bean id="accountService"
-														factory-bean="serviceLocator"
-														factory-method="createAccountServiceInstance"/>
+				[Source Code]
 
-													For a bean as follows:
+					package com.myApplication;
 
-														public class DefaultServiceLocator {
-															private static ClientService clientService = new ClientServiceImpl();
-															private static AccountService accountService = new AccountServiceImpl();
+					class ClassA
+					{
+					    public ClassA()
+					    {
+						...
+					    }
+					}
 
-															public ClientService createClientServiceInstance() {
-																return clientService;
-															}
+					class ClassB
+					{
+					    public ClassB()
+					    {
+						...
+					    }
+					}
 
-															public AccountService createAccountServiceInstance() {
-																return accountService;
-															}
-														}
+				Here:
 
-									3. Static Nested:	Specify a static nested class using . or $:
+					1. Container reads the XML file as there being:
 
-													com.example.MyClass.MyStaticNestedClass
-													com.example.MyClass$MyStaticNestedClass
+						"Only x2 beans each with no-argument constructors found at 'com.MyApplication.ClassA' and 'com.MyApplication.ClassB'"
 
-													NB: The binary name or source name for the static nested class can be used.
+			2. Constructor: DI Arguments (Unambiguous)
 
-				<property	name:		Name of bean property
-						ref:		Type of bean property, this highlights/indicates the dependecy between 'collaborating objects'
+				[XML Config]
+
+					<beans>
+					    <bean id="classA" class="com.myApplication.ClassA">
+						<constructor-arg ref="classB"/>
+						<constructor-arg ref="classC"/>
+					    </bean>
+
+					    <bean id="classB" class="com.myApplication.ClassB"/>
+					    <bean id="classC" class="com.myApplication.ClassC"/>
+					</beans>
+
+				[Source Code]
+
+					package com.myApplication;
+
+					class ClassA
+					{
+					    private final ClassB objClassB;
+					    private final ClassC objClassC;
+	
+					    public ClassA(ClassB objClassB, ClassC objClassC)
+					    {
+						this.objClassB = objClassB;
+						this.objClassC = objClassC;
+					    }
+					}
+
+				Here:
+					1. Container reads the XML file as there being:
+
+						"x3 beans found at 'com.MyApplication.ClassA', 'com.MyApplication.ClassB' and 'com.MyApplication.ClassC'"
+						"ClassA requires to be supplied with an instance of ClassB and ClassC to be instantiated and passed as arguments to its constructor"
+
+					2. ClassB and ClassC are not related (via inheritence) and unambiguous therefore the container can inject them in order from left to right as presented in the constructor signature.
+
+			2. Constructor: DI Arguments (Ambiguous)
+
+				If there is ambiguity then additional clarity will be needed via attributes e.g. 'type', 'index' or 'name'
+
+				[XML Config]
+
+					<bean id="classA" class="com.myApplication.ClassA">
+					    <constructor-arg type="int" value="7500000"/>
+					    <constructor-arg type="java.lang.String" value="Period of time:"/>
+					</bean>
+
+					[Or]
+
+					<bean id="classB" class="com.myApplication.ClassA">
+					    <constructor-arg index="0" value="7500000"/>
+					    <constructor-arg index="1" value="Period of time:"/>
+					</bean>
+
+					[Or]
+
+					<bean id="classB" class="com.myApplication.ClassA">
+					    <constructor-arg name="iYears" value="7500000"/>
+					    <constructor-arg name="sDescription" value="Period of time:"/>		
+					</bean>
+
+				[Source Code]
+
+					class ClassA
+					{
+					    private final int iYears;
+					    private final String sDescription;
+	
+					    public ClassA(int iYears, String sDescription)
+					    {
+					    	this.iYears = iYears;
+						this.sDescription = sDescription;
+					    }
+					}
+
+					Here:
+						1. Providing the additional attributes in XML configuration allows the container to determine what the bean arguments are, how they should be interpreted and injected.
+						2. Code must be compiled with Debug flag enabled if using the 'name' attribute so that container can lookup name, if not wish to enable flag then use @ConstructorProperties() below:
+
+						class ClassA
+						{
+						    @ConstructorProperties({"iYears", "sDescription"})
+						    public ClassA(int iYears, String sDescription)
+						    {
+							this.iYears = iYears;
+							this.sDescription = sDescription;
+						    }
+						}
+
+			3. Constructor: DI Arguments (Ojects and Primitive with inline value)
+
+				[XML Config]
+
+					<bean id="houseBean" class="com.myApplication.HouseBean">
+						<constructor-arg ref="doorBean"/>
+						<constructor-arg ref="windowBean"/>
+						<constructor-arg type="int" value="1"/>			<!-- value of the int is defined 'inline' and passed straight into the constructor-->
+					</bean>
+
+					<bean id="doorBean" class="com.myApplication.DoorBean"/>
+					<bean id="windowBean" class="com.myApplication.WindowBean"/>
+
+				[Source Code]
+
+					public class HouseBean {
+
+					    private DoorBean bean1;
+					    private WindowBean bean2;
+					    private int iHeight;
+
+					    public HouseBean(DoorBean myDoorBean, WindowBean myWindowBean, int i) {
+						this.bean1 = myDoorBean;
+						this.bean2 = myWindowBean;
+						this.iHeight = i;
+					    }
+					}
+
+					Here:
+
+						1. Given that the arguments are unambiguous and do not use 'name' attribute the corresponding paramters names can be given identifiers as seen fit.
+
+			4. Static Factory Method:
+
+				[XML Config]
+
+					<bean id="houseBean" class="com.myApplication.HouseBean" factory-method="createInstance">		<!-- introduce factory-method attribute -->
+						<constructor-arg ref="doorBean"/>
+						<constructor-arg ref="windowBean"/>
+						<constructor-arg type="int" value="1"/>			<!-- value of the int is defined 'inline' and passed straight into the constructor-->
+					</bean>
+
+					<bean id="doorBean" class="com.myApplication.DoorBean"/>
+					<bean id="windowBean" class="com.myApplication.WindowBean"/>
+
+				[Source Code]
+
+					public class HouseBean {
+
+					    private HouseBean(...)										//Private Constructor
+					    {...}
+
+					    public static HouseBean createInstance(DoorBean myDoorBean, WindowBean myWindowBean, int i) {	//Instantiates, builds and returns necessary HouseBean bean
+						HouseBean hb = new HouseBean(...);
+						return hb;
+					    }
+					}
+
+					Here:
+
+						1. The static factory method returns the required bean (just as a constructor method would).
+						2. The static factory method are passsed the same set of arguments as the constructor.
+						3. The passed arguments are still considered the dependencies of the bean HouseBean regardless if they are used or not.
+
+						NB: The instance that is returned by the static factory method does not need to be of the same class that contains this method.
+
+			5. Instance Factory Method:
+
+				The same as above for static factory method except that the attribute 'factory-bean' is used instead of 'class'. Here the factory method is of an existing bean that already exists in the container:
+
+				[XML Config]
+
+					<bean id="serviceLocator" class="examples.DefaultServiceLocator"/>
+
+					<bean id="clientService"
+					    factory-bean="serviceLocator"
+					    factory-method="createClientServiceInstance"/>
+
+					<bean id="accountService"
+					    factory-bean="serviceLocator"
+					    factory-method="createAccountServiceInstance"/>
+
+				[Source Code]
+
+					public class DefaultServiceLocator {
+					    private static ClientService clientService = new ClientServiceImpl();
+					    private static AccountService accountService = new AccountServiceImpl();
+
+					    public ClientService createClientServiceInstance() {
+						return clientService;
+					    }
+
+					    public AccountService createAccountServiceInstance() {
+						return accountService;
+					    }
+					}
+
+	<bean/>
+
+		- XML Configuration definitions of beans can generally be considered as follows:
+
+			<bean id="houseBean"					// ID of this particular bean to be used within this xml file (not within source code)
+			    class="com.myApplication.HouseBean">		// Location of the actual implementation source code for this bean
+
+			    <constructor-arg ref="doorBean"/>			// Describes how to get an actual instance of the bean and what (if anything) needs to be passed into it's constructor 
+			    <constructor-arg ref="windowBean"/>			// "
+			    <constructor-arg type="int" value="1"/>		// "
+			</bean>
+
+		- XML Configuration bean definition describes the following aspects:
+
+			1. ID:		Local ID for use within the XML configuration as referenced from within this current file or externally.
+			2. Location:	Where the actual class *.java implementation can be found.
+			3. Instance:	How an instance of the bean can be acquired from the *.java file in the supplied location e.g. via either it's:
+
+						1. Constructor
+						2. Setter
+						3. Static factory method
+						4. Instance factory method
+
+			4. Arguments:	What (dependencies) need to be passed into the method (at stage 3 above) in order to generate and return an instance of the bean.
+
+	Attribute: ref
+
+		- XML Configuration definitions of beans make constant use of the attriute 'ref=', this is the type of the object/bean that is to be passed/injected/wired into the client bean.
+
+	Constructor/Setter Parameter Names
+
+		- XML Configuration appears to indicate that the name of the parameters defined within a constructor/setter method do not matter (only the type matters). Unless the 'name' attribute is used within the XML element.
+
+	Static Nested Beans
+
+		- XML Configuration can declare/specify that a bean may have a static nested bean by setting the 'class' to a value containing the . or $:
+
+			com.example.MyClass.MyStaticNestedClass
+			com.example.MyClass$MyStaticNestedClass
+
+			NB: Either the binary name or source name for the static nested class can be used.
+
+	Element v Attribute Style:
+
+		- XML Configuration may be defined using either 'attribute' or 'element' styling, both are equivalent and interpreted the same but are formatted differently:
+
+			Attribute:	<bean id="clientService" class="examples.ClientService"	factory-method="createInstance"/>
+
+			Element:	<bean>
+					    <id>clientService</id>
+					    <class>examples.ClientService</class>
+					    <factory-method>createInstance<factory-method>
+					</bean>
+
+			Spring recommends using attribute style whenever possible
+
+	Importing XML Files:
 
 		- XML Configuration can be combined/concatented using <import/> element:
 
@@ -133,6 +381,9 @@ Spring
 					NB: XML Configuration files can contain configuration other than just bean definitions by using differing namespaces e.g. 'context' and 'util'.				  
 
 		- XML Configuration files that are defined and imported must contain valid bean definitions and adhere to the Spring Schema.
+
+	File Referencing:
+
 		- XML Configuration files can also be referenced using:
 
 			1. Relative Parent Directories:
@@ -150,7 +401,12 @@ Spring
 
 				However this is not recommended due to the coupling of the application to specific locations.
 
+	File Placeholder:
+
 		- XML Configuration files should ideally always be referenced indirectly e.g. using "${...}" placeholders.
+
+	Inline Values:
+
 		- XML Configuration files may include the 'inline' definition for a primitive value i.e. where the value of an int is 'hardcoded' into the XML file and is passed straight into the receiving method (be that a constructor or factory method)
 
 			<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -160,26 +416,52 @@ Spring
 				<property name="password" value="misterkaoli"/>
 			</bean>
 
+			[Corresponding setter method]
+
 			public void setDriverClassName(String s) {		//NB: Need to check/test is having the parameter name set to 's' or needs to be set to 'driverClassName'
 				this.s = s;
 			}
 
-			NB: This can be further refined using p-namespace:
+	p-namespace:
 
-				<beans xmlns="http://www.springframework.org/schema/beans"
-					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-					xmlns:p="http://www.springframework.org/schema/p"
-					xsi:schemaLocation="http://www.springframework.org/schema/beans
-					https://www.springframework.org/schema/beans/spring-beans.xsd">
+		- XML Configuration files may include the 'inline' definition for a primitive value using the more refined p-namespace:
 
-					<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource"
-						destroy-method="close"
-						p:driverClassName="com.mysql.jdbc.Driver"
-						p:url="jdbc:mysql://localhost:3306/mydb"
-						p:username="root"
-						p:password="misterkaoli"/>
+			<beans xmlns="http://www.springframework.org/schema/beans"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xmlns:p="http://www.springframework.org/schema/p"
+				xsi:schemaLocation="http://www.springframework.org/schema/beans
+				https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-				</beans>
+				<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+					destroy-method="close"
+					p:driverClassName="com.mysql.jdbc.Driver"
+					p:url="jdbc:mysql://localhost:3306/mydb"
+					p:username="root"
+					p:password="misterkaoli"/>
+			</beans>
+
+	java.util.Properties:
+
+		- XML Configuration files may contain definitions that can be converted directly into java.util.Properties objects:
+
+			<bean id="mappings" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+			    <property name="properties">					<!-- Automatically interpreted as a java.util.Properties -->
+				<value>
+				    jdbc.driver.className=com.mysql.jdbc.Driver
+				    jdbc.url=jdbc:mysql://localhost:3306/mydb
+				</value>
+			    </property>
+			</bean>
+
+	IDE Auto Complete:
+
+		- XML Configuration files when constructed/typed within IDE typically contain auto-complete to help prevent typos, ensure that these extensions/facilities are used.
+
+	Conversion Service:
+
+		- XML Configuration files make use of the Conversion Service to convert string values defined 'inline' as shown into values that can be assigned to the type of the property/argument.
+
+	<idref/>
 
 		- XML Configuration files make use of the <idref/> element which allows for typos in xml to be found during compile time rather than runtime.
 
@@ -190,13 +472,15 @@ Spring
 				</property>
 			</bean>
 
-			[The above is equivalent to the following (which will only find typos during runtime)]:
+			[The above is equivalent to the following (which would only find typos during runtime)]:
 
 				<bean id="theTargetBean" class="..." />
 
 				<bean id="client" class="...">
 					<property name="targetName" value="theTargetBean"/>
 				</bean>
+
+	
 
 	Groovy Configuration:
 
