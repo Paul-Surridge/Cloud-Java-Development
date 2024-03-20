@@ -180,7 +180,7 @@ Annotations
 				@Author(name = "John Smith")
 				class MyClass { ... }
 
-	Extention:
+	Extenstion:
 
 		- Annotations cannot be extended:
 

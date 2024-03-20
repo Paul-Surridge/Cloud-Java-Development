@@ -133,7 +133,7 @@ Spring
 
 					2. Constructors:
 
-						- @Autowired is applied to the ClassB objClassB where ClassB has been declared a bean:
+						@Autowired is applied to the ClassB objClassB where ClassB has been declared a bean:
 
 							@Autowired
 							ClassA (ClassB objClassB)
@@ -144,7 +144,7 @@ Spring
 							ClassA (@Autowired ClassB objClassB)
 							{...}
 
-						- @Autowired can use qualifiers @MinNumber @MaxNumber which perform more specific injection as defined within the custom annotation which utilises @Qualifier.
+						@Autowired can use qualifiers @MinNumber @MaxNumber which perform more specific injection as defined within the custom annotation which utilises @Qualifier.
 
 							@Autowired
     							public NumberGeneratorImpl(@MaxNumber int maxNumber, @MinNumber int minNumber) {

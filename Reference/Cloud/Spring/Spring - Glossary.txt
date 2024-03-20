@@ -1,15 +1,19 @@
 Glossary - Spring:
 
-	Collaborating Objects:
+	Collaborators:
 
-		- An objects internal references to other objects i.e. the properties of a class.
+		- Beans internal references to other beans/dependencies:
 
 			class ClassA
 			{
-			    ClassB B = new ClassB();
-			    ClassC C = new ClassC();
+			    ClassB B;
+			    ClassC C;
 
-		- An instance of Class collaborates with instances of ClassB and ClassC.
+		- Bean ClassA collaborates with instances of ClassB and ClassC (once injected by container).
+
+	Client Bean:
+
+		- Bean that is receiving a resource in the form of an injected target bean.
 
 	Configuration Methods:
 
@@ -19,6 +23,12 @@ Glossary - Spring:
 
 		- A general bean which is used to instantiate other beans via static or instance factory methods.
 		- A FactoryBean (opposed to just general bean) is an implementation within Spring.
+
+	JavaBean:
+
+		- Class with only x1 default (no-argument) constructor.
+		- Class with only appropriate getter/setter for each property.
+		- Many Spring developers use this form prefering 'true' JavaBeans, however Spring is not restricted to only this form of bean, non-bean style can of course be incorporated.
 
 	Layer:
 
@@ -35,3 +45,7 @@ Glossary - Spring:
 			<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 
 			'name' and 'value' are sub-element types within the <property/> element.
+
+	Target Bean:
+
+		- Bean which is to be injected into a client/receiving bean.
