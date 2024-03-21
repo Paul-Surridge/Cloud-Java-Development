@@ -86,16 +86,38 @@ Spring
 								public class ConfigurationClass2
 								{...}
 
+	Bean Lifecycle:
 
-	Bean Instantiation:
+		General bean lifecycle as follows:
 
-		- Bean instantiation i.e. bean instance is obtained within a container:
+			1. Application starts up.
+			2. Container surveys the project/source code, collating/registering all locations where a bean can be instantiated and returned.
+			3. Application is running.
+			4. Container instantiates beans as the running of the application dictates.
+			5. Upon encountering a bean that needs to be instantiated.
 
-			- via Constructor:			The constructor on the bean is called as normal passing in 0 or more dependencies that the bean needs to instantiate and return that particular instance.
-			- via Static Factory Method:		The constructor may be hidden/private and a static factory method on the bean is called passing in 0 or more dependencies that the method may or may not need to instantiate and return that particular instance.
-			- via Instance Factory Method:		The constructor may be hidden/private and a factory method on the bean is called passing in 0 or more dependencies that the method may or may not need to instantiate and return that particular instance.
-			- via @Bean				'Bean Method' contained in a @Configuration class is a factory method returning an instance of the declared bean.
-			- via @Component			'Component Scanning' searches the project source code for classes annotated with @Component or a specialisation e.g. @Controller, @Service, presumably the constructor of that class is called as normal as described above.
+				1. Container utilises the bean register looks up location/how the bean is instantiated.
+				2. Container invokes mechanism.
+				3. Bean is returned to calling code.
+				4. Bean is injected into variable.
+
+				If this bean has dependecies of its own, then those dependency beans are recursively pre-instantiated potentially generating a chain/graph of 'wired' dependency beans 'going back for as far a necessary'.
+			
+			6. Container destroys bean when required.
+
+		NB: 'Container' here is presumably the corresponding ApplicationContext.
+
+	Bean Instantiation + Return:
+
+		- Bean instantiation + Return is the process where the container invokes an action/means in order to instantiate and return a bean (to ultimately be injected elsewhere):
+
+			Returns Bean					Description
+			------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			- via *.xml + Constructor:			Constructor on the bean is used to return an instance of that bean, the constructor on the bean is called as normal passing in 0 or more dependencies that the bean needs to instantiate and return that particular instance.
+			- via *.xml + Static Factory Method:		Constructor on the bean maybe hidden/private and a static factory method on the bean is called passing in 0 or more dependencies that the method may or may not need to instantiate and return that particular instance.
+			- via *.xml + Instance Factory Method:		Constructor on the bean maybe hidden/private and a factory method on an instance of the bean is called passing in 0 or more dependencies that the method may or may not need to instantiate and return that particular instance.
+			- via @Bean					'Bean Method' contained in a @Configuration class is a factory method returning an instance of the declared bean.
+			- via @Component				'Component Scanning' searches the project source code for classes annotated with @Component or a specialisation e.g. @Controller, @Service, presumably the constructor of that class is called as normal as described above.
 
 			The container pre-instantiates and injects any arguments that are defined as parameters/dependencies that the bean needs to instantiate and return that particular instance.
 
@@ -112,18 +134,27 @@ Spring
 			4. Injection:		Created bean in now inserted/injected into the location/variable.
 
 		- Bean Instantiation can be any Java bean i.e. any normal class can be pulled into a container, it does not need to have any particular interface or be constructed in any particular fashion.
-		- Bean Instantiation can be carried out using x3 ways (as specified within the class attribute of <bean/> within *.xml file as described above):
 
 	Bean Injection:
 
-		- Bean injection is:
+		- Beans are injected into source code:
+			
+			Returns Bean*						XML Element							Arguments (Injected Beans)							Description
+			------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			- via *.xml + Constructor Arguments:			<constructor-arg/>						Arguments injected into local reference variable in constructor via this.	Container instantiates 'behind the scenes' and passes arguments into constructor.
+			- via *.xml + Static Factory Method Arguments:		<constructor-arg/> + <factory-method/>				Arguments may or may not be used to generate and return bean.			Container instantiates 'behind the scenes' and passes arguments into static factory method.
+			- via *.xml + Instance Factory Method Arguments:	<constructor-arg/> + <factory-method/> + <factory-bean/>	Arguments may or may not be used to generate and return bean.			Container instantiates 'behind the scenes' and passes arguments into instance factory method.
+			- via @Bean Method Arguments:				-								Arguments may or may not be used to generate and return bean.			Container instantiates 'behind the scenes' and passes arguments into bean factory method contained within @Configuration class.
 
-			- via Constructor Arguments:			Container instantiates 'behind the scenes' and passes arguments into constructor.
-			- via Setter Method Arguments:			Container instantiates 'behind the scenes' and passes arguments into a setter method.
-			- via Static Factory Method Arguments:		Container instantiates 'behind the scenes' and passes arguments into static factory method.
-			- via Instance Factory Method Arguments:	Container instantiates 'behind the scenes' and passes arguments into instance factory method.
-			- via Bean Method Arguments:			Container instantiates 'behind the scenes' and passes arguments into bean factory method contained within @Configuration class.
-			- via Autowiring:				Container instantiates 'behind the scenes' and inserts those into instance directly into fields/properties annotated with @Autowire.
+
+			Insert Directly Into Bean Reference Variable*
+			-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			- via *.xml + Setter Method Arguments:			<property/>							Arguments injected into local reference variable in setter method via this.	Container instantiates 'behind the scenes' and passes arguments into a setter method.
+			- via @Autowired:					-								-										Container instantiates 'behind the scenes' and inserts bean directly into fields/properties annotated with @Autowired.
+
+
+			*Returns Bean:		Beans are injected as arguments into method parameters for the method to ultimately generate/build and return another bean to be injected/used elsewhere.
+			*Insert Directly:	Beans are injected directly into existing reference variables.
 
 	Bean Setting:
 
@@ -266,11 +297,27 @@ Spring
 
 		- Bean Singletons are simply a type which has only x1 instance within the whole container
 
+	Bean Initialisation
 
+		- Bean Initialisation by the conatiner/ApplicationContxt is:
 
+			Singleton:	Eager 		Created as part of container initialisation process, therefore errors can be found earlier rather than when a bean happens to be created.
+			Other:		Lazy 		Created as/when required as program is running.
 
+		- Bean Initialisation lazy/eager can be set at global/container default state:
 
+			<beans default-lazy-init="true">
+			    <!-- No beans will be pre-instantiated, all beans including all singletons will be lazy... -->
+			</beans>
 
+		- Bean Initialisation on a Singleton bean can be set to be lazy using 'lazy-init' within the XML:
+
+			<bean id="classA" class="com.MyApplication.ExpensiveToCreateClassA" lazy-init="true"/>		//Lazy Singleton Bean
+			<bean name="classB" class="com.MyApplication.ClassB"/>						//Eager Singleton Bean
+
+			NB: If a lazy bean is the dependency of an eager bean, then both beans are created eagerily.
+
+		
 
 
 
