@@ -1,0 +1,112 @@
+Spring - Method Injection:
+
+	Overview:
+
+		- Method Injection is a means in which another instance of a bean can be requested from the container/ApplicationContext.
+		- Method Injection involves foregoing some of the IoC, where the instantiation/management of beans and their lifecycle is not all managed by the container but by the developer/source code.
+
+	Purpose:
+
+		- Method Injection allows for new instances of a particular bean to be generated as/when required by the source code.
+		- Method Injection removes the complete reliance and adherance to the control of the container e.g.
+
+			1. Bean properties usually following the lifecycle of the client bean i.e. property bean is usually created/destroyed in accordance and along with the client bean e.g.
+
+				Client Bean		Client Bean Property		Dependency Lifecycle
+				------------------------------------------------------------------------------------------------------------------------------------------
+
+				Singleton 		Singleton:			Dependency/property is created/destroyed when the client bean is created/destroyed
+				non-Singleton 		non-Singleton			Dependency/property is created/destroyed when the client bean is created/destroyed
+
+				NB: In most applications the container only has Singleton beans communicating with other Singleton beans.
+
+			2. However a issue arises if the lifecycle between x2 collaborating beans differs i.e. one is a Singleton and the other is not e.g.
+
+				1. BeanA is a singleton.
+				2. BeanA needs to use a new instance of BeanB in every method.
+				3. BeanA is however only created when the container is created.
+				4. BeanA only creates an instance of BeanB only once when BeanA is created.
+				5. BeanA will not be provided automatically by the container with a new instance of BeanB upon each method invocation.
+
+				It is therefore necessary for a means to instruct/interact with the container and 'ask it' to generate a new instance of BeanB (via Method Injection).
+
+			3. BeanA can be 'made aware' of the encompassing container by implementing the ApplicationContextAware interface and using .getBean("BeanB") to request/receive a new instance of BeanB during each method invocation.
+
+	applicationContext.getBean():
+
+		- applicationContext.getBean() can be used to request a new instance of a registered bean from the container:
+
+			import org.springframework.beans.BeansException;
+			import org.springframework.context.ApplicationContext;
+			import org.springframework.context.ApplicationContextAware;
+
+			public class CommandManager implements ApplicationContextAware {
+
+			    private ApplicationContext applicationContext;
+
+			    public Object process(Map commandState) {							// Stateful Command-style class 'commandState' used to perform some processing
+				Command command = this.applicationContext.getBean("command", Command.class);		// Request a new instance of Command from container
+				command.setState(commandState);								// Set the state on the new Command instance
+				return command.execute();
+			    }
+
+			    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+				this.applicationContext = applicationContext;
+			    }
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

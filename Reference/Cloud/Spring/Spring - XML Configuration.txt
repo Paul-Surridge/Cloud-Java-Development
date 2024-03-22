@@ -865,6 +865,8 @@ Spring - XML Configuration:
 		- Autowiring allows for significant reduction in XML configuration with no need to specify <constructor-arg/> or <properties/>.
 		- Autowiring allows for dependency alterations to be adjusted quickly without need to adjust XML configuration. Once the source code is stable/finalised then the dependencies can be explicitly defined in XML.
 		- Autowiring must be enabled on a per bean basis within the XML.
+		- Autowiring relies on the container making its 'best guess' and provide 'candidates' as to what to inject (which will naturally lead to the potential for error).
+		- Autowiring should only be used when necessary, explicit bean definition is still preferred/recommended.
 		- Autowiring by default is set to off.
 		- Autowiring default can be changed but it is not recommended for:
 
@@ -878,7 +880,7 @@ Spring - XML Configuration:
 			No		- Default.
 					- Bean references are defined via 'ref' element in XML.
 
-			byName		- Spring looks up collaborator bean to be injected into a property variable by using that property variable name.
+			byName		- Spring looks up the collaborator bean to be injected into a property variable by using that property variable name.
 
 						1. XML: Bean 'ClassA' is set autowire="byName".
 						2. XML: Bean 'ClassA' has a <property/> called 'master'. Therefore would naturally require a corresponding setMaster() to inject that dependency and set that property.
@@ -886,9 +888,116 @@ Spring - XML Configuration:
 
 							class ClassA {
 							    @Autowired
-							    Master master;	//Reference variable identifer 'master' = name of a bean located in container. To be checked/tested
+							    ClassB master;	//Property identifer 'master' = name of another bean located in container.
 
+						4. Container looks for a bean with the same name as the property 'master'. NB: It is presumed that the name of the property could be either id/name/alias of another bean.
+						5. If:
 
+							Matching Beans in Container		Action				Injection
+							---------------------------------------------------------------------------------------------------
+							None:					Nothing Happens			master = null
+							1:					Bean Injected			master = instance of ClassB
+							>1:					Exception Thrown		n/a
+
+			byType:		- Spring looks up the collaborator bean to be injected into a property variable by using that property type.
+
+						1. XML: Bean 'ClassA' is set autowire="byType".
+						2. XML: Bean 'ClassA' has a <property/> of type ClassB.
+						3. Source Code:
+
+							class ClassA {
+							    @Autowired
+							    ClassB master;	//Property Type 'ClassB' = type of another bean located in container.
+
+						4. Container looks for a bean with the same type as the property 'master' i.e. ClassB.
+						5. If:
+
+							Matching Beans in Container		Action				Injection
+							---------------------------------------------------------------------------------------------------
+							None:					Nothing Happens			master = null
+							1:					Bean Injected			master = instance of ClassB
+							>1:					Exception Thrown		n/a
+
+			constructor:	- Spring looks up the collaborator bean to be injected into a contructor parameter (rather than a property variable as for byName | byType).
+
+						1. XML: Bean 'ClassA' is set autowire="constructor".
+						2. XML: Bean 'ClassA' has a <constructor-arg/> of type ClassB.
+						3. Source Code:
+
+							class ClassA {
+							    @Autowired
+							    public ClassA(ClassB classB);		//Constructor Type 'ClassB' = type of another bean located in container.
+
+							    [Or]
+
+							    public ClassA(@AutowiredClassB classB);	//Constructor Type 'ClassB' = type of another bean located in container.
+
+						4. Container looks for a bean with the same type as the constructor parameter ClassB.
+						5. If:
+
+							Matching Beans in Container		Action				Injection
+							---------------------------------------------------------------------------------------------------
+							None:					Nothing Happens			classB = null
+							1:					Bean Injected			classB = instance of ClassB
+							>1:					Exception Thrown		n/a
+
+		- Autowiring can be applied to arrays and strongy-typed collections:
+
+			1. Bean must be of mode 'byType' or 'constructor'.
+			2. Container searches register for all matching type as normal (described above).
+
+		- Autowiring has considerations when using Map:
+
+			A map can be autowired if:
+
+				1. Key: 	String (Bean names)
+				2. Values:	Instances of names
+
+				Key		Value
+				----------------------------------
+				"ClassB"	Instance of ClassB
+				"ClassC"	Instance of ClassC
+				"ClassD"	Instance of ClassD
+				"ClassE"	Instance of ClassE
+
+			NB: This is not fully clear in documentation, for how do you store differing (unrelated) types as values in a map, needs to be researched/tested.
+
+		- Autowiring has considerations:
+
+			1. Autowiring is always overriden by explicit definition in XML e.g. <property/> <constructor-arg/>
+			2. Autowiring cannot be applied to:
+
+				- Primitives
+				- Strings
+				- Classes (NB: Unclear in documentation what 'Classes' corresponds to)
+				- Arrays of primitive/Strings/classes
+
+			3. Autowiring is less exact than explicit wiring.
+			4. Autowiring prevents the relationship between Spring managed objects being explicitly documented.
+			5. Autowiring could introduce ambiguity leading to unexpected results (however in such an event of ambiguity an exception is thrown).
+			6. Autowiring may prevent all information being supplied to tools that generate documentation from/for a container.
+			7. Autowiring ambiguity is not a problem with array, (strongly typed) collection or (strongly typed) map (for of course all of these types are distinct and there is no ambiguity),
+				however there is no mechanism to arbitrate when encountering ambiguity with custom types therefore an exception will be thrown (likely during runtime).
+
+		- Autowiring ambiguity can be allieviated via:
+
+			1. Explicit Wiring:		Do not use autowiring and use explicit wiring.
+			2. Exclude:			Do not allow an individual bean to be autowired by setting <autowire-candidate/> attributes to false.
+			3. Primary Candidate:		Designate a particular bean as the primary candidate via <primary/> attribute to true.
+			4. Fine Tune:			Utilise fine tuning via additional annotations to refine condifguration e.g. @Qualifiers
+  
+		- Autowiring exclusion can be applied to specific beans in XML:
+
+			1. <autowire-candidate/> = false:	Attribute in <bean/> can be set to false to prevent the <bean/> from becoming a candidate to be auto-injected/autowired into another bean via @Autowired.
+								This only effects type based autowiring i.e. beans whose <autowire/> mode is myType | constructor. Autowiring byName will still inject a bean if name matches.
+
+			2. <default-autowire-candidates/>:	Attribute in <beans/> can be supplied a comma separated list of String patterns to allow e.g.
+
+									default-autowire-candidates = "*Repository"		//Only allow beans whose name ends with 'Repository' to be auto-injected/@Autowired. 
+
+								NB: Bean <autowire-candidate/> takes precedence over any values assigned to <default-autowire-candidates/> i.e. if <autowire-candidate/> is set either "true" or "false" it will overide/ignore any patterns.
+
+		- Autowiring exclusion can only be applied to the 'Injection-side only' i.e. a bean can only be excluded from being injected into another via @Autowired but can still use/contain @Autowired properties itself.
 
 	Groovy Configuration:
 
