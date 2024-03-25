@@ -9,13 +9,11 @@ Spring
 
 		- Bean is not a wrapper object that encloses another java object but simply an object defined and contained within a container.
 		- Bean is simply the name of an object within a container, it is the name Spring gives to objects within the container.
-		- Bean is given a default ID if one not explicitly defined within the metadata.
+		- Beans are referenced/tagged with an ID, name and/or alias.
+		- Beans are given a default ID if one not explicitly defined within the metadata.
 		- Beans are typically multiple, a container needs to have at least x1 bean but even the most simplest of enterprise applications have multiple beans.
-		- Bean can cause a graph of beans to be instantiated, as a bean may reference/declare other beans naturally as internal objects/properties of that class.
-
-	Purpose:
-
-		- ...
+		- Beans can cause a graph of beans to be instantiated, as a bean may reference/declare other 'collaborator' beans as internal objects/properties of that class.
+		- Beans are injected into the container by the container itself i.e. the container context.
 
 	Bean Declaration/Definition:
 
@@ -317,7 +315,183 @@ Spring
 
 			NB: If a lazy bean is the dependency of an eager bean, then both beans are created eagerily.
 
-		
+	Bean Scope:
+
+		- Bean Scope is defined within the XML.
+		- Bean Scope has x6 levels (x4 only available if use web-aware ApplicationContext) and/or x1 custom/thead scope:
+
+			Scope							Description
+			------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			singleton		standard/all-scoped		Bean may be instantiated only once in IoC Container			Container can only ever have x1 instance of this bean.
+			prototype		standard/all-scoped		Bean is a prototype/template used to create many instances		Container can have multiple instance of this bean.
+
+			request			web-scoped			Bean is attached to lifecycle of single HTTP request			Each HTTP request will have its own instance of the bean created from a single bean definition.
+			session			web-scoped			Bean is attached to lifecycle of single HTTP session			Each HTTP session will have its own instance of the bean created from a single bean definition.
+			application		web-scoped			Bean is attached to lifecycle of ServletContxt
+			websocket		web-scoped			Bean is attached to lifecycle of WebSocket			
+
+		- Bean Scope:
+
+			Singleton:		For all stateless beans		Beans which do not hold a particular state				e.g. DatabaseConnectionManager or DAO
+			Prototype:		For all stateful beans		Beans which hold a particular state					e.g. Business logic
+
+		- Bean Scope: Instantiation:
+
+			Singleton:		Instantiated only when Container is instantiated (rather than during runtime).
+						Instantiation of any non-singleton dependencies may or may not be 'ready' at that time e.g. may end up being null or in unexpected state.
+						Instantiation of any non-singleton dependencies may require Method Injection to 'refesh' their instances.
+
+			Prototype:		Instantiated when requested by container throughout runtime.			
+
+		- Bean Scope: Singleton:
+
+			- Singleton:	Only x1 instance ever exists in container.
+			- Singleton:	Only x1 instance is stored in cache, all request for bean of this ID return the instance in the cache.
+			- Singleton:	Only x1 instance is created when the container is created.
+			- Singleton:	Only x1 instance is shared/injected into all client beans.
+			- Singleton:	Differs slightly to singleton definition in Design Patterns (Gang of Four) in that:
+
+						Design Patterns:	Singleton is created with/per ClassLoader
+						Spring:			Singleton is created with/per container/bean
+
+			- Singleton:	Defined in XML:
+
+						<bean id="accountService" class="com.myApplication.DefaultAccountService"/>
+						<bean id="accountService" class="com.myApplication.DefaultAccountService" scope="singleton"/>		//Redundant, singleton is default
+
+		- Bean Scope: Prototype:
+
+			- Prototype:	Multiple instances of beans in x1 container
+			- Prototype:	New instance is created/returned by container when is injected into client bean e.g. via normal injection or requested via .getBean().
+			- Prototype:	Defined in XML:
+
+						<bean id="accountUser" class="com.myApplication.DefaultAccountUser" scope="prototype"/>
+
+			- Prototype:	Lifecycle Management:
+
+						- Spring does not handle the complete lifecycle of prototype beans (unlike other beans/scopes).
+						- Spring instantiates/configures and assembles a prototype bean and then hands it over to client bean with no further interaction/management.
+						- Spring initialisation callbacks are called but destruction callbacks are not.
+						- Spring expects the developer to treat the bean as if it was created using 'new' in standard Java where once the bean has been created it is 'handed over' to the developer to manage its lifecycle including any tidying up and ensuring the release of any used resources.
+						- Spring expects the developer to use/define the beans custom 'post-processor' callback methods to clean up that beans use of resources.
+
+		- Bean Scope: Web: Initial Configuration:
+
+			- Web-scope beans:
+
+				Request
+				Session
+				Application
+				Websocket
+
+			- Web-scope beans require addition configuration to be defined within the web.xml file if both of the following:
+
+				1. Servlet:			Using a Servlet web container.
+				2. Request Processing:		Request processing is outside of Spring Dispatcher Servlet e.g. JSF.
+
+				If so required follow:		https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html#beans-factory-scopes-other-web-configuration
+
+				NB: If the web-scoped beans are accessed within a Spring MVC project and processed by the DispatherServlet then this is not necessary for it is all handled by DispatcherServlet.
+
+		- Bean Scope: Request
+
+			- Request:	Bean is newly/uniquely created/associated with each and every HTTP request.
+			- Request:	Bean state may be altered without concern of affecting other/subsequent beans.
+			- Request:	Bean life is associated with the life of the request, once the request has completed processing the bean is disgarded.
+			- Request:	Defined in XML:
+
+						<bean id="loginAction" class="com.myApplication.LoginAction" scope="request"/>
+
+			- Request:	Defined using annotation:
+
+						@RequestScope
+						@Component
+						public class LoginAction {
+						    // ...
+						}
+
+						Here:
+							1. Bean returned by this @Component (which would have been registered via @ComponentScan)
+							2. Bean has a scope of 'request' automtically applied.
+
+		- Bean Scope: Session
+
+			- Session:	Bean is newly/uniquely created/associated with each and every HTTP session.
+			- Session:	Bean state may be altered without concern of affecting other/subsequent beans.
+			- Session:	Bean life is associated with the life of the session, once the session is discarded the bean is disgarded.
+			- Session:	Defined in XML:
+
+						<bean id="userPreferences" class="com.something.UserPreferences" scope="session"/>
+
+			- Session:	Defined using annotation:
+
+						@SessionScope
+						@Component
+						public class UserPreferences {
+						    // ...
+						}
+
+						Here:
+							1. Bean returned by this @Component (which would have been registered via @ComponentScan)
+							2. Bean has a scope of 'session' automtically applied.
+
+		- Bean Scope: Application
+
+			- Application:	Bean is newly/uniquely created/associated with each and every web application/ServletContext i.e. there is only x1 per web application.
+			- Application:	Bean is stored as a single attribute of the ServletContext.
+			- Application:	Bean life is associated with the life of the entire web application, once the ServletContext is discarded the bean is disgarded.
+			- Application:	Bean state may be altered without concern of affecting other/subsequent beans.
+			
+			- Application:	Defined in XML:
+
+						<bean id="appPreferences" class="com.something.AppPreferences" scope="application"/>
+
+			- Application:	Defined using annotation:
+
+						@ApplicationScope
+						@Component
+						public class AppPreferences {
+						    // ...
+						}
+
+						Here:
+							1. Bean returned by this @Component (which would have been registered via @ComponentScan)
+							2. Bean has a scope of 'application' automtically applied.
+
+		NB:
+			- Complete the Application section.
+			- Double check that only x1 request/session instance per request/session (I presume it is).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
