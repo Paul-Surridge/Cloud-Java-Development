@@ -437,11 +437,13 @@ Spring
 
 		- Bean Scope: Application
 
-			- Application:	Bean is newly/uniquely created/associated with each and every web application/ServletContext i.e. there is only x1 per web application.
-			- Application:	Bean is stored as a single attribute of the ServletContext.
+			- Application:	Bean is newly/uniquely created/associated with each and every ServletContext:
+
+						NB: Bean is a singleton per ServletContext (not per ApplicationContext) where there may be multiple ServletContext per ApplicationContext.
+
+			- Application:	Bean is stored/cached/exposed/visible as a single attribute of the ServletContext.
 			- Application:	Bean life is associated with the life of the entire web application, once the ServletContext is discarded the bean is disgarded.
 			- Application:	Bean state may be altered without concern of affecting other/subsequent beans.
-			
 			- Application:	Defined in XML:
 
 						<bean id="appPreferences" class="com.something.AppPreferences" scope="application"/>
@@ -458,23 +460,68 @@ Spring
 							1. Bean returned by this @Component (which would have been registered via @ComponentScan)
 							2. Bean has a scope of 'application' automtically applied.
 
-		NB:
-			- Complete the Application section.
-			- Double check that only x1 request/session instance per request/session (I presume it is).
+
+		- Bean Scope: Websocket:
+
+			- Websocket:	Bean life is associated with the lifecycle of a WebSocket session as applied to STOMP over WebSocket applications.
+
+		- Bean Scope: Proxying:
+
+			- Bean Scope can vary between beans where there may be situations when you need a singleton which collaborates with a bean of session-scope (or any situation where the x2 beans have differing lifecycles), this is achieved via:
+
+				1. XML Configuration:
+
+					<bean id="userPreferences" class="com.myApplication.UserPreferences" scope="session">
+					    <aop:scoped-proxy/>
+					</bean>
+
+					<bean id="userManager" class="com.myApplication.UserManager">
+					    <property name="userPreferences" ref="userPreferences"/>
+					</bean>
+
+					Here:
+
+						1. UserManager is a singleton whose lifecycle is that of the container.
+						2. UserPreferences is of session scope whose lifecycle is that of the current session.
+						3. UserPreferences is a collaborator of UserManager but having differing lifecycles.
+
+				2. UserManager is instantiated only once therefore so is the property UserPreferences (but of course this changes with each session).
+				3. UserManager therefore uses an <aop:scoped-proxy> eqivalent of UserPreferences.
+				4. Container creates a object which exposes the same public interface as UserPreferences and is used as an intermediary to the real/current session scoped instance of UserPreferences.
+				5. UserManager is not aware and knows no difference.
+				6. UserManager invokes a method on the proxy at which point the proxy fetches the current instance and delegates the invocation onto the 'real' UserPreferences. 
+
+				NB: There are other alternative ways of retrieving the current session instance:
+
+					1. ObjectFactory<MyTargetBean>:		Declare injection point (constructor/setter argument or @Autowired field) as a ObjectFactory<MyTargetBean>, then call getObject() to get current instance.
+					2. ObjectProvider<MyTargetBean>:	Declare injection point (constructor/setter argument or @Autowired field) as a ObjectProvider<MyTargetBean>, then call getIfAvailable() and getIfUnique() to get current instance.
+					3. Provider<MyTargetBean>:		Declare injection point (constructor/setter argument or @Autowired field) as a Provider<MyTargetBean>, then call get() to get current instance.
+
+					For more info on how to use the above:
+
+						- https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html#beans-factory-scopes-websocket
+						- https://docs.spring.io/spring-framework/reference/core/beans/standard-annotations.html
+
+				NB: Proxying as described above can be applied between beans which are both singletons, where the reference going through an intermediate proxy that is serializable and therefore able to re-obtain the target singleton bean on deserialization.
+				NB: When declaring a bean <aop:scoped-proxy/> which is also of scope=prototype, every method call on the container created proxy leads to the creation of a new target instance to which the method call is delegated/forwarded onto.
+
+			- Beans created to become proxy for beans of differing scopes/lifecycles (via <aop:scoped-proxy/>) is via CGLIB.
+
+				NB: Proxies created via CGLIB do not delegate to private methods, attempting to call a private method will not delegate to the actual scoped target object.
+
+			- Beans created using the standard JDK interface-based proxies can be an alternative to CGLIB based proxies by setting attribute proxy-target-class="false": 
+
+				<bean id="userPreferences" class="com.myApplication.UserPreferences" scope="session">
+				    <aop:scoped-proxy proxy-target-class="false"/>
+				</bean>
+
+				NB: Using JDK interface-based proxies removes the need for additional libraries to be included in the classpath.
+				NB: Using JDK interface-based proxies requires that the target bean implement an interface which the collaborators can use to interact with the current target bean.
+
+					https://docs.spring.io/spring-framework/reference/core/aop/proxying.html
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+			https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html#beans-factory-scopes-injection
 
 
 
