@@ -465,9 +465,9 @@ Spring
 
 			- Websocket:	Bean life is associated with the lifecycle of a WebSocket session as applied to STOMP over WebSocket applications.
 
-		- Bean Scope: Proxying:
+		- Bean Scope: Proxying: Collaborating Beans of Differing Scope
 
-			- Bean Scope can vary between beans where there may be situations when you need a singleton which collaborates with a bean of session-scope (or any situation where the x2 beans have differing lifecycles), this is achieved via:
+			- Bean Scope can vary between beans where there may be situations when you need a singleton which collaborates with a bean of session-scope (or any situation where the x2 beans have differing lifecycles), this is achieved via the use of a proxy:
 
 				1. XML Configuration:
 
@@ -491,40 +491,153 @@ Spring
 				5. UserManager is not aware and knows no difference.
 				6. UserManager invokes a method on the proxy at which point the proxy fetches the current instance and delegates the invocation onto the 'real' UserPreferences. 
 
-				NB: There are other alternative ways of retrieving the current session instance:
+			- Bean proxy can be achieved via the following ways
 
-					1. ObjectFactory<MyTargetBean>:		Declare injection point (constructor/setter argument or @Autowired field) as a ObjectFactory<MyTargetBean>, then call getObject() to get current instance.
-					2. ObjectProvider<MyTargetBean>:	Declare injection point (constructor/setter argument or @Autowired field) as a ObjectProvider<MyTargetBean>, then call getIfAvailable() and getIfUnique() to get current instance.
-					3. Provider<MyTargetBean>:		Declare injection point (constructor/setter argument or @Autowired field) as a Provider<MyTargetBean>, then call get() to get current instance.
+				1. <aop:scoped-proxy/>:					Declare in XML the proxy and have the container create/manage the proxy and relaying to current bean (which is of different/shorter lifecycle scope e.g. a session).
+				2. ObjectFactory<MyTargetBean>:				Declare injection point (constructor/setter argument or @Autowired field) as a ObjectFactory<MyTargetBean>, then call getObject() to get current instance.
+				3. ObjectProvider<MyTargetBean>:			Declare injection point (constructor/setter argument or @Autowired field) as a ObjectProvider<MyTargetBean>, then call getIfAvailable() and getIfUnique() to get current instance.
+				4. Provider<MyTargetBean>:				Declare injection point (constructor/setter argument or @Autowired field) as a Provider<MyTargetBean>, then call get() to get current instance.
+				5. <aop:scoped-proxy proxy-target-class="false"/>	Target bean must implement an interface which the client beans/collaborators can use to interact with the current target bean.
+				6. Directly:						Declare and inject request/session proxies directly into beans via @Autowiring within WebApplicationContext.
 
-					For more info on how to use the above:
+				NB: Singletons:
 
-						- https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html#beans-factory-scopes-websocket
-						- https://docs.spring.io/spring-framework/reference/core/beans/standard-annotations.html
+					- Proxying as described above can be applied between beans which are both singletons, where the reference going through an intermediate proxy that is serializable and therefore able to re-obtain the target singleton bean on deserialization.
+				
+				NB: Prototypes:
 
-				NB: Proxying as described above can be applied between beans which are both singletons, where the reference going through an intermediate proxy that is serializable and therefore able to re-obtain the target singleton bean on deserialization.
-				NB: When declaring a bean <aop:scoped-proxy/> which is also of scope=prototype, every method call on the container created proxy leads to the creation of a new target instance to which the method call is delegated/forwarded onto.
+					- When declaring a bean <aop:scoped-proxy/> which is also of scope=prototype, every method call on the container created proxy leads to the creation of a new target instance to which the method call is delegated/forwarded onto.
 
-			- Beans created to become proxy for beans of differing scopes/lifecycles (via <aop:scoped-proxy/>) is via CGLIB.
+				NB: CGLIB:
 
-				NB: Proxies created via CGLIB do not delegate to private methods, attempting to call a private method will not delegate to the actual scoped target object.
+					- Proxies created via <aop:scoped-proxy/> is via CGLIB.
+					- Proxies created via CGLIB do not delegate to private methods, attempting to call a private method will not delegate to the actual scoped target object.
 
-			- Beans created using the standard JDK interface-based proxies can be an alternative to CGLIB based proxies by setting attribute proxy-target-class="false": 
+				NB: JDK interface-based proxies:
 
-				<bean id="userPreferences" class="com.myApplication.UserPreferences" scope="session">
-				    <aop:scoped-proxy proxy-target-class="false"/>
-				</bean>
+					- Proxies created via standard JDK interface-based proxies can be an alternative to CGLIB based proxies by setting attribute proxy-target-class="false" (Item 5 above): 
 
-				NB: Using JDK interface-based proxies removes the need for additional libraries to be included in the classpath.
-				NB: Using JDK interface-based proxies requires that the target bean implement an interface which the collaborators can use to interact with the current target bean.
+						<bean id="userPreferences" class="com.myApplication.UserPreferences" scope="session">
+						    <aop:scoped-proxy proxy-target-class="false"/>
+						</bean>
 
-					https://docs.spring.io/spring-framework/reference/core/aop/proxying.html
+					- Using JDK interface-based proxies removes the need for additional libraries to be included in the classpath.
+					- Using JDK interface-based proxies requires that the target bean implement an interface which the collaborators can use to interact with the current target bean.
 
+				NB: WebApplicationContext Direct Injection:
 
-			https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html#beans-factory-scopes-injection
+					- Proxies can be injected directly into beans using @Autowired when within a WebApplicationContext (Item 6 above):
 
+						HttpServletRequest
+						HttpServletResponse
+						HttpSession
+						WebRequest
+						FacesContext		(If JSF is present)
+						ExternalContext		(If JSF is present)
 
+					- Proxies can be injected e.g. request/session objects into both singleton and serializable beans						
 
+				For more info on how to use the above:
+
+					- https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html#beans-factory-scopes-websocket
+					- https://docs.spring.io/spring-framework/reference/core/beans/standard-annotations.html
+					- https://docs.spring.io/spring-framework/reference/core/aop/proxying.html
+
+		- Bean Scope: Custom:
+
+			- Bean scopes are extensible.
+			- Bean scopes can be custom defined.
+			- Bean scopes can be overriden/extended (however this is considered bad practice).
+			- Bean scopes cannot override built-in singleton/prototype.
+			- Bean scopes that are custom involve the implementation of the following interface:
+
+				org.springframework.beans.factory.config.Scope
+
+				Which contain x4 core methods for the following actions:
+
+					Instantiate:	Retrieve (or instantiate and retrieve) a bean from a particular scope.
+					Destroy:	Remove a bean from a particular scope.
+
+				For example presume that a custom scope was of/called 'session' then:
+
+					Object get(String name, ObjectFactory<?> objectFactory)
+
+						- Bean Exists:		Bean is returned from session.
+						- Bean Not Exist:	Bean is instantiated, bound to the session and then returned from session.
+
+					Object remove(String name)
+
+						- Bean Exists:		Bean is removed from session and returned.
+						- Bean Not Exists:	Nothing happens and null is returned.
+
+					void registerDestructionCallback(String name, Runnable destructionCallback)
+
+						- Register a callback to occur when either:
+
+							1. Object Destroyed:	Object is naturally destroyed.
+							2. Object Expires:	Object is naturally destroyed due to the context i.e. session expires.
+
+					String getConversationId()
+
+						- Returns the 'conversation' identifer for the underlying scope e.g. if the scope is session then 'session' is returned.
+						- This identifer is defined when a scope is registered with the container.
+
+				NB: Spring supplies examples of how to implement this interface e.g. SimpleThreadScope
+
+			- Bean scopes that are custom require the container to be notified accordingly this can be done via:
+
+				1. Source Code:
+
+					void registerScope(String scopeName, Scope scope);
+
+					This method is declared on the ConfigurableBeanFactory interface, which is available through the BeanFactory property on most concrete implementations of ApplicationContext.
+
+						String scopeName:		Name that wish to apply/call custom scope
+						Scope scope:			Instance of the custom Scope implementation that you wish to register and use.
+
+					Below uses SimpleThreadScope which is included with Spring but is not registered by default. The sequence would be the same but for your own custom implementation of the Scope interface.
+
+						Source Code:
+
+							Scope threadScope = new SimpleThreadScope();				//Use own implementation of the interface 'Scope'
+							beanFactory.registerScope("thread", threadScope);			//Register with container
+
+						XML:
+
+							<bean id="..." class="..." scope="thread">				//Create beans which adhere to your own custom scope
+
+				2. XML:
+
+					<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">		//Register with container
+					    <property name="scopes">
+						<map>
+						    <entry key="thread">
+							<bean class="org.springframework.context.support.SimpleThreadScope"/>
+						    </entry>
+						</map>
+					    </property>
+					</bean>
+
+					<bean id="thing2" class="x.y.Thing2" scope="thread">					//Create beans which adhere to your own custom scope
+					    <property name="name" value="Rick"/>
+					    <aop:scoped-proxy/>
+					</bean>
+
+					NB: When <aop:scoped-proxy/> is placed within a <bean> declaration for a FactoryBean implementation, it is the factory bean itself that is scoped not the object returned from getObject().
+
+	Bean Behaviour:
+
+		- Bean behaviour can be set/configured via a number of ways using interfaces which can be grouped as follows:
+
+			1. Lifecycle Callbacks e.g.
+
+				InitializingBean
+				DisposableBean
+
+			2. 'Aware' Interfaces e.g.
+
+				ApplicationContextAware
+				BeanNameAware
 
 
 
